@@ -2,6 +2,7 @@ package se.acoder.autohub.frontend.CustomViews.TravelInfoView;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,14 +15,15 @@ import android.view.View;
 import java.lang.annotation.Target;
 
 import se.acoder.autohub.R;
+import se.acoder.autohub.frontend.CustomViews.DrawView;
 
 /**
  * Created by Johannes Westlund on 2017-03-14.
  */
 
-public class Grid extends View {
-    private int speedWidth = 500;
-    private int vMid = 70;
+public class Grid extends DrawView {
+    private int speedWidth = 200;
+    private int vMid = 30;
 
     private Paint linePaint, bgPaint;
 
@@ -59,18 +61,19 @@ public class Grid extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-        setMeasuredDimension(parentWidth, vMid*2);
+        setMeasuredDimension(parentWidth, (int) toPx(vMid*2, getResources()));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        Resources r = getResources();
 
         Path dash = new Path();
-        dash.moveTo(-10, vMid);
-        dash.lineTo(getWidth()+10, vMid);
-        dash.lineTo(getWidth()+10, 2*vMid+10);
-        dash.lineTo(-10, 2*vMid+10);
+        dash.moveTo(toPx(-10, r), toPx(vMid, r));
+        dash.lineTo(toPx(getWidth()+10, r), toPx(vMid, r));
+        dash.lineTo(toPx(getWidth()+10, r), toPx(2*vMid+10, r));
+        dash.lineTo(toPx(-10, r), toPx(2*vMid+10, r));
         dash.close();
 
         canvas.drawPath(dash, bgPaint);
@@ -79,12 +82,12 @@ public class Grid extends View {
         Path speedMeter = new Path();
         int startX = getWidth()/2;
         speedMeter.moveTo(startX, 0);
-        speedMeter.lineTo(startX + speedWidth/2, 0);
-        speedMeter.lineTo(startX + speedWidth/2+100, vMid);
-        speedMeter.lineTo(startX + speedWidth/2, 2*vMid);
-        speedMeter.lineTo(startX - speedWidth/2, 2*vMid);
-        speedMeter.lineTo(startX - speedWidth/2-100, vMid);
-        speedMeter.lineTo(startX - speedWidth/2, 0);
+        speedMeter.lineTo(startX + toPx(speedWidth, r)/2, 0);
+        speedMeter.lineTo(startX + toPx(speedWidth, r)/2+ toPx(50, r), toPx(vMid, r));
+        speedMeter.lineTo(startX + toPx(speedWidth, r)/2, toPx(2*vMid, r));
+        speedMeter.lineTo(startX - toPx(speedWidth, r)/2, toPx(2*vMid, r));
+        speedMeter.lineTo(startX - toPx(speedWidth, r)/2- toPx(50, r), toPx(vMid, r));
+        speedMeter.lineTo(startX - toPx(speedWidth, r)/2, 0);
         speedMeter.close();
 
         canvas.drawPath(speedMeter, bgPaint);

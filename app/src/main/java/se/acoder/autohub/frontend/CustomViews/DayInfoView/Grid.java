@@ -2,6 +2,7 @@ package se.acoder.autohub.frontend.CustomViews.DayInfoView;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,13 +15,14 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import se.acoder.autohub.R;
+import se.acoder.autohub.frontend.CustomViews.DrawView;
 
 /**
  * Created by johves on 2017-03-15.
  */
 
-public class Grid extends View {
-    private int height = 110;
+public class Grid extends DrawView {
+    private int height = 50;
     private Paint linePaint;
     private Paint bgPaint;
 
@@ -58,22 +60,23 @@ public class Grid extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-        setMeasuredDimension(parentWidth, height+2);
+        setMeasuredDimension(parentWidth, (int) toPx(height+2, getResources()));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        Resources r = getResources();
 
         Path dash = new Path();
-        dash.moveTo(-10,-10);
-        dash.lineTo(-10,height/2);
-        dash.lineTo(0, height/2);
-        dash.lineTo(100, height);
-        dash.lineTo(getWidth()-100, height);
-        dash.lineTo(getWidth(), height/2);
-        dash.lineTo(getWidth()+10, height/2);
-        dash.lineTo(getWidth()+10, -10);
+        dash.moveTo(toPx(-10, r),toPx(-10, r));
+        dash.lineTo(toPx(-10, r),toPx(height/2, r));
+        dash.lineTo(toPx(0, r), toPx(height/2, r));
+        dash.lineTo(toPx(50, r), toPx(height, r));
+        dash.lineTo(getWidth()-toPx(50,r), toPx(height, r));
+        dash.lineTo(getWidth(), toPx(height/2, r));
+        dash.lineTo(getWidth()+ toPx(10, r), toPx(height/2, r));
+        dash.lineTo(getWidth()+ toPx(10, r), toPx(-10, r));
         dash.close();
 
         canvas.drawPath(dash, bgPaint);
