@@ -42,13 +42,14 @@ public class TravelInfoView extends ConstraintLayout {
 
     private void init(Context context, AttributeSet attrs, int defStyle) {
         // Load attributes
+        /*
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.TravelInfoView, defStyle, 0);
 
         mainColor = a.getColor(
                 R.styleable.TravelInfoView_exampleColor,
                 mainColor);
-        a.recycle();
+        a.recycle();*/
 
         rootView = inflate(context, R.layout.travel_info_layout, this);
 
