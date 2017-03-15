@@ -51,10 +51,10 @@ public class TravelInfoView extends ConstraintLayout {
                 mainColor);
         a.recycle();*/
 
-        rootView = inflate(context, R.layout.travel_info_layout, this);
-
         grid = new Grid(context, attrs, defStyle);
         addView(grid);
+
+        rootView = inflate(context, R.layout.travel_info_layout, this);
     }
 
     @Override

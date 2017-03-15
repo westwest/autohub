@@ -7,10 +7,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
 import java.lang.annotation.Target;
+
+import se.acoder.autohub.R;
 
 /**
  * Created by Johannes Westlund on 2017-03-14.
@@ -20,34 +23,37 @@ public class Grid extends View {
     private int speedWidth = 500;
     private int vMid = 70;
 
-    private Paint linePaint;
+    private Paint linePaint, bgPaint;
 
     public Grid(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public Grid(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
     public Grid(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context);
     }
 
     @TargetApi(21)
     public Grid(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init();
+        init(context);
     }
 
-    private void init(){
+    private void init(Context context){
         linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        linePaint.setColor(Color.RED);
+        linePaint.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
         linePaint.setStrokeWidth(4);
         linePaint.setStyle(Paint.Style.STROKE);
+
+        bgPaint = new Paint();
+        bgPaint.setColor(ContextCompat.getColor(context, android.R.color.background_dark));
     }
 
     @Override
@@ -60,8 +66,15 @@ public class Grid extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawLine(0,vMid,getWidth()/2-(speedWidth/2)-100, vMid, linePaint);
-        canvas.drawLine(getWidth()/2+(speedWidth/2)+100, vMid, getWidth(), vMid, linePaint);
+        Path dash = new Path();
+        dash.moveTo(-10, vMid);
+        dash.lineTo(getWidth()+10, vMid);
+        dash.lineTo(getWidth()+10, 2*vMid+10);
+        dash.lineTo(-10, 2*vMid+10);
+        dash.close();
+
+        canvas.drawPath(dash, bgPaint);
+        canvas.drawPath(dash, linePaint);
 
         Path speedMeter = new Path();
         int startX = getWidth()/2;
@@ -73,6 +86,8 @@ public class Grid extends View {
         speedMeter.lineTo(startX - speedWidth/2-100, vMid);
         speedMeter.lineTo(startX - speedWidth/2, 0);
         speedMeter.close();
+
+        canvas.drawPath(speedMeter, bgPaint);
         canvas.drawPath(speedMeter, linePaint);
     }
 }

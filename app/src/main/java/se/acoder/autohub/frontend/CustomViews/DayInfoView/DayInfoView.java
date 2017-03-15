@@ -31,9 +31,9 @@ public class DayInfoView extends RelativeLayout {
     }
 
     private void init(Context context){
-        rootView = inflate(context, R.layout.day_info_layout,this);
-
         grid = new Grid(context);
         addView(grid);
+
+        rootView = inflate(context, R.layout.day_info_layout,this);
     }
 }
