@@ -9,15 +9,29 @@
     tools:layout_editor_absoluteX="0dp"
     android:background="#999">
 
+    <FrameLayout
+        android:id="@+id/mainView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="40dp"
+        android:background="#FFF"
+        app:layout_constraintBottom_toBottomOf="@+id/tiView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/diView"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/diView"
+        app:layout_constraintVertical_bias="1.0">
+
+    </FrameLayout>
+
     <view
         android:id="@+id/diView"
         class="se.acoder.autohub.frontend.CustomViews.DayInfoView.DayInfoView"
-        layout_alignParentTop="true"
-        layout_centerHorizontal="true"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="0dp" />
+        android:layout_height="wrap_content" />
 
     <view
         class="se.acoder.autohub.frontend.CustomViews.TravelInfoView.TravelInfoView"
@@ -25,9 +39,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="0dp" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
