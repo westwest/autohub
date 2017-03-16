@@ -10,19 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="Button" />
+        android:text="Button"
+        android:layout_margin="40dp"/>
 
     <Button
         android:id="@+id/slot1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="Button" />
+        android:text="Button"
+        android:layout_margin="40dp"/>
 
     <Button
         android:id="@+id/slot2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="Button" />
+        android:text="Button"
+        android:layout_margin="40dp"/>
 </LinearLayout>
