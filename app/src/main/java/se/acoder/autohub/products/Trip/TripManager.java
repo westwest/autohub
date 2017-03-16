@@ -1,4 +1,4 @@
-package se.acoder.autohub.components.Trip;
+package se.acoder.autohub.products.Trip;
 
 import android.location.Location;
 
