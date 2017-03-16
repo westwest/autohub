@@ -41,24 +41,43 @@ public class TravelInfoView extends ConstraintLayout {
     }
 
     private void init(Context context, AttributeSet attrs, int defStyle) {
-        // Load attributes
-        /*
-        final TypedArray a = getContext().obtainStyledAttributes(
-                attrs, R.styleable.TravelInfoView, defStyle, 0);
-
-        mainColor = a.getColor(
-                R.styleable.TravelInfoView_exampleColor,
-                mainColor);
-        a.recycle();*/
-
         grid = new Grid(context, attrs, defStyle);
         addView(grid);
 
         rootView = inflate(context, R.layout.travel_info_layout, this);
+        vDistance = (TextView) findViewById(R.id.ti_distance);
+        vSpeed = (TextView) findViewById(R.id.ti_speed);
+        vTime = (TextView) findViewById(R.id.ti_time);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    public void update(Float distance, Float speed, Long time){
+        if(distance != null)
+            vDistance.setText(formatDistance(distance));
+        if(speed != null)
+            vSpeed.setText(formatSpeed(speed));
+        if(time != null){
+            vTime.setText(formatTime(time));
+        }
+    }
+
+    private String formatDistance(float distance){
+        return (distance/1000+"").substring(0,3) + " km";
+    }
+
+    private String formatSpeed(float speed){
+        double km = speed * 3.6;
+        return Double.toString(km).substring(0,3) + " km/h";
+    }
+
+    private String formatTime(long time){
+        float tInMin = time/(60*1000);
+        int fullHours = (int) tInMin/60;
+        int fullMin = (int) tInMin - fullHours*60;
+        return fullHours + "h " + fullMin + "min";
     }
 }

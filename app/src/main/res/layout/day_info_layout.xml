@@ -4,30 +4,12 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/di_clock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView"
-        android:layout_centerHorizontal="true"
-        android:text="13:32" />
-
-    <TextView
         android:id="@+id/di_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageView"
         android:layout_toEndOf="@+id/imageView"
         android:text="TextView" />
-
-    <TextView
-        android:id="@+id/di_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="20 June"
-        android:layout_alignBaseline="@+id/di_clock"
-        android:layout_alignBottom="@+id/di_clock"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="60dp" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -37,4 +19,21 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="60dp"
         app:srcCompat="@color/colorPrimary" />
+
+    <TextClock
+        android:id="@+id/textClock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/di_temp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="54dp"
+        android:text="20 Jun"
+        android:layout_alignBaseline="@+id/textClock"
+        android:layout_alignBottom="@+id/textClock"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
