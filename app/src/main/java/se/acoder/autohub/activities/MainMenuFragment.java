@@ -93,7 +93,7 @@ public class MainMenuFragment extends Fragment {
                     Product p = items.get(position*3+i);
                     slots[i].setText(p.getName());
                     Drawable icon = ContextCompat.getDrawable(getContext(), p.getIcon());
-                    slots[i].setCompoundDrawables(null,icon,null,null);
+                    slots[i].setCompoundDrawablesWithIntrinsicBounds(null,icon,null,null);
                 }else{
                     slots[i].setAlpha(0);
                 }
