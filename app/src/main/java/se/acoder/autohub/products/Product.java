@@ -7,8 +7,8 @@ import android.support.v4.app.Fragment;
  */
 
 public abstract class Product {
-    int iconResId;
-    String name;
+    private int iconResId;
+    private String name;
 
     public Product(String name, int resId){
         this.name = name;

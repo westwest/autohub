@@ -17,6 +17,6 @@ public class InternetRadioProduct extends Product {
 
     @Override
     public Fragment bootstrap() {
-        return null;
+        return new ChannelListFragment();
     }
 }

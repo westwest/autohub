@@ -54,6 +54,13 @@ public class MainMenuFragment extends Fragment {
         return rootView;
     }
 
+    private void initProduct(Product p){
+        getActivity().getSupportFragmentManager().beginTransaction()
+                                                 .replace(R.id.mainView, p.bootstrap())
+                                                 .addToBackStack(p.getName()+"-entrypoint")
+                                                 .commit();
+    }
+
     private class MenuPagerAdapter extends PagerAdapter{
         private Context context;
         private List<Product> items;
@@ -89,10 +96,16 @@ public class MainMenuFragment extends Fragment {
 
             for(int i=0; i<pageSize; i++){
                 if(i < widgetsOnPage){
-                    Product p = items.get(position*3+i);
+                    final Product p = items.get(position*3+i);
                     slots[i].setText(p.getName());
                     Drawable icon = ContextCompat.getDrawable(getContext(), p.getIcon());
                     slots[i].setCompoundDrawablesWithIntrinsicBounds(null,icon,null,null);
+                    slots[i].setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            initProduct(p);
+                        }
+                    });
                 }else{
                     slots[i].setAlpha(0);
                 }

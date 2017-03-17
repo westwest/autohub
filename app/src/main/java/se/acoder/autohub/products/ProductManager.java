@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import se.acoder.autohub.R;
 import se.acoder.autohub.products.AppShop.AppShop;
 import se.acoder.autohub.products.InternetRadio.InternetRadioProduct;
 import se.acoder.autohub.products.NavigationProduct.NavigationProduct;
