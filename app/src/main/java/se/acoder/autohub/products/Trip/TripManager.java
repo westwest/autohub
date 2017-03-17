@@ -21,6 +21,10 @@ public class TripManager {
     }
 
     public void computeLocation(Location location){
+        if(!ongoing && lastSignificantLocation != null &&
+                lastSignificantLocation.distanceTo(location) > 50)
+            ongoing = true;
+
         if(ongoing) {
             if(lastSignificantLocation.distanceTo(location) > 50){
                 lastSignificantLocation = location;
@@ -34,7 +38,6 @@ public class TripManager {
         } else {
             start = location;
             lastSignificantLocation = location;
-            ongoing = true;
         }
         lastLocation = location;
     }
