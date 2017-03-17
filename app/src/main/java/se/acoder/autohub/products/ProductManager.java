@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Set;
 
 import se.acoder.autohub.R;
+import se.acoder.autohub.products.AppShop.AppShop;
 import se.acoder.autohub.products.InternetRadio.InternetRadioProduct;
+import se.acoder.autohub.products.NavigationProduct.NavigationProduct;
 import se.acoder.autohub.products.Phone.PhoneProduct;
 
 /**
@@ -18,17 +20,18 @@ import se.acoder.autohub.products.Phone.PhoneProduct;
 
 public class ProductManager {
     private Context context;
-    private Set<String> purchasedProducts;
+    private Set<String> purchasedApps;
     private final String KEY = "products";
     private ArrayList<Product> products;
 
     //Standard product constants
     private final String P_PHONE = "phone";
+    private final String P_NAVI = "navigation";
     private final String P_RADIO = "radio";
     private final String P_SHOP = "shop";
 
     private final String[] stdProducts = {
-            P_PHONE, P_RADIO, P_SHOP
+            P_PHONE, P_NAVI, P_RADIO
     };
 
     public ProductManager(Context context){
@@ -36,10 +39,12 @@ public class ProductManager {
         ArrayList<String> names = new ArrayList<String>(Arrays.asList(stdProducts));
 
         SharedPreferences SP = this.context.getSharedPreferences("purchasedProducts", Context.MODE_PRIVATE);
-        Set<String> purchasedProducts = SP.getStringSet(KEY, null);
-        if(purchasedProducts != null)
-            names.addAll(purchasedProducts);
-
+        purchasedApps = SP.getStringSet(KEY, null);
+        if(purchasedApps != null) {
+            names.addAll(purchasedApps);
+        }
+        //Shop always displays last
+        names.add(P_SHOP);
         products = createProducts(names);
     }
 
@@ -51,8 +56,14 @@ public class ProductManager {
                 case P_PHONE:
                     list.add(new PhoneProduct());
                     break;
+                case P_NAVI:
+                    list.add(new NavigationProduct());
+                    break;
                 case P_RADIO:
                     list.add(new InternetRadioProduct());
+                    break;
+                case P_SHOP:
+                    list.add(new AppShop());
             }
         }
         return list;
