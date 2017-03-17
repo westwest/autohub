@@ -7,7 +7,7 @@
     tools:context="se.acoder.autohub.activities.MainHub"
     tools:layout_editor_absoluteY="25dp"
     tools:layout_editor_absoluteX="0dp"
-    android:background="#999">
+    android:background="#333">
 
     <FrameLayout
         android:id="@+id/mainView"
@@ -17,7 +17,6 @@
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginTop="40dp"
-        android:background="#FFF"
         app:layout_constraintBottom_toBottomOf="@+id/tiView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/diView"

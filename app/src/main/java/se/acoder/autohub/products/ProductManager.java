@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import se.acoder.autohub.R;
+import se.acoder.autohub.products.InternetRadio.InternetRadioProduct;
 import se.acoder.autohub.products.Phone.PhoneProduct;
 
 /**
@@ -49,6 +50,9 @@ public class ProductManager {
             switch(name){
                 case P_PHONE:
                     list.add(new PhoneProduct());
+                    break;
+                case P_RADIO:
+                    list.add(new InternetRadioProduct());
             }
         }
         return list;

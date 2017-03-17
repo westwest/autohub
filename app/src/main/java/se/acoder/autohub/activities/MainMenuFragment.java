@@ -48,7 +48,6 @@ public class MainMenuFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.main_menu_layout, container, false);
-        rootView.setBackgroundColor(Color.BLUE);
         ViewPager menu = new ViewPager(getContext());
         menu.setAdapter(new MenuPagerAdapter(getContext(), PM.getProducts()));
         rootView.addView(menu);
@@ -72,7 +71,6 @@ public class MainMenuFragment extends Fragment {
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
-            Log.d("TEST", "CALLED");
             return view == ((LinearLayout)object);
         }
 
@@ -84,8 +82,6 @@ public class MainMenuFragment extends Fragment {
             TextView slot0 = (TextView) item_view.findViewById(R.id.slot0);
             TextView slot1 = (TextView) item_view.findViewById(R.id.slot1);
             TextView slot2 = (TextView) item_view.findViewById(R.id.slot2);
-
-            Log.d("TEST", slot0.toString());
 
             TextView[] slots = {slot0,slot1,slot2};
 
