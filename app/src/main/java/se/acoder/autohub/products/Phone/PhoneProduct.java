@@ -12,7 +12,7 @@ import se.acoder.autohub.products.Product;
 public class PhoneProduct extends Product {
 
     public PhoneProduct(){
-        super("Telephone", R.drawable.ic_phone_black_24dp);
+        super("Telephone", R.drawable.ic_phone);
     }
 
     @Override

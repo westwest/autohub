@@ -18,6 +18,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -78,13 +81,13 @@ public class MainMenuFragment extends Fragment {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View item_view = layoutInflater.inflate(R.layout.menu_page_layout, container, false);
 
-            Button slot0 = (Button) item_view.findViewById(R.id.slot0);
-            Button slot1 = (Button) item_view.findViewById(R.id.slot1);
-            Button slot2 = (Button) item_view.findViewById(R.id.slot2);
+            TextView slot0 = (TextView) item_view.findViewById(R.id.slot0);
+            TextView slot1 = (TextView) item_view.findViewById(R.id.slot1);
+            TextView slot2 = (TextView) item_view.findViewById(R.id.slot2);
 
             Log.d("TEST", slot0.toString());
 
-            Button[] slots = {slot0,slot1,slot2};
+            TextView[] slots = {slot0,slot1,slot2};
 
             int widgetsOnPage = items.size() - position*3;
 
