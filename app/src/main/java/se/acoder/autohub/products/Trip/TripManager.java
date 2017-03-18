@@ -35,9 +35,15 @@ public class TripManager {
             }
             distance += lastLocation.distanceTo(location);
             time += location.getTime() - lastLocation.getTime();
-        } else {
-            start = location;
-            lastSignificantLocation = location;
+        } else if(lastSignificantLocation != null){
+            if(lastSignificantLocation.distanceTo(location) > 50){
+                start = lastSignificantLocation;
+                ongoing = true;
+            } else if (lastSignificantLocation.getTime() > 10*1000){
+                lastSignificantLocation = null;
+            } else {
+                lastSignificantLocation = location;
+            }
         }
         lastLocation = location;
     }
