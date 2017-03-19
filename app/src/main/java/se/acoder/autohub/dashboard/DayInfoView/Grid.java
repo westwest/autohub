@@ -46,7 +46,7 @@ public class Grid extends DrawView {
     private void init(Context context){
         linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         linePaint.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
-        linePaint.setStrokeWidth(4);
+        linePaint.setStrokeWidth(6);
         linePaint.setStyle(Paint.Style.STROKE);
 
         bgPaint = new Paint();
@@ -68,8 +68,8 @@ public class Grid extends DrawView {
         dash.moveTo(toPx(-10, r),toPx(-10, r));
         dash.lineTo(toPx(-10, r),toPx(height/2, r));
         dash.lineTo(toPx(0, r), toPx(height/2, r));
-        dash.lineTo(toPx(50, r), toPx(height, r));
-        dash.lineTo(getWidth()-toPx(50,r), toPx(height, r));
+        dash.lineTo(toPx(40, r), toPx(height, r));
+        dash.lineTo(getWidth()-toPx(40,r), toPx(height, r));
         dash.lineTo(getWidth(), toPx(height/2, r));
         dash.lineTo(getWidth()+ toPx(10, r), toPx(height/2, r));
         dash.lineTo(getWidth()+ toPx(10, r), toPx(-10, r));

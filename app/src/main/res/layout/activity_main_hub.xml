@@ -14,8 +14,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="30dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
         android:layout_marginTop="50dp"
         app:layout_constraintBottom_toBottomOf="@+id/tiView"
         app:layout_constraintHorizontal_bias="0.0"
@@ -30,7 +28,9 @@
         android:id="@+id/diView"
         class="se.acoder.autohub.dashboard.DayInfoView.DayInfoView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp" />
 
     <view
         class="se.acoder.autohub.dashboard.TravelInfoView.TravelInfoView"
@@ -41,5 +41,30 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         app:layout_constraintLeft_toLeftOf="parent" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/tiView"
+        app:layout_constraintRight_toRightOf="@+id/tiView"
+        app:layout_constraintTop_toTopOf="@+id/tiView">
+
+        <view
+            android:id="@+id/view2"
+            class="se.acoder.autohub.dashboard.spedometer.SpedometerView"
+            id="@+id/view"
+            android:layout_width="220dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

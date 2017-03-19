@@ -13,7 +13,7 @@ import se.acoder.autohub.R;
  */
 public class TravelInfoView extends ConstraintLayout {
     private View rootView;
-    private TextView vDistance, vSpeed, vTime;
+    private TextView vDistance, vTime;
     private Grid grid;
 
     private int mainColor;
@@ -40,7 +40,6 @@ public class TravelInfoView extends ConstraintLayout {
 
         rootView = inflate(context, R.layout.travel_info_layout, this);
         vDistance = (TextView) findViewById(R.id.ti_distance);
-        vSpeed = (TextView) findViewById(R.id.ti_speed);
         vTime = (TextView) findViewById(R.id.ti_time);
     }
 
@@ -49,11 +48,9 @@ public class TravelInfoView extends ConstraintLayout {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
-    public void update(Float distance, Float speed, Long time){
+    public void update(Float distance, Long time){
         if(distance != null)
             vDistance.setText(formatDistance(distance));
-        if(speed != null)
-            vSpeed.setText(formatSpeed(speed));
         if(time != null){
             vTime.setText(formatTime(time));
         }

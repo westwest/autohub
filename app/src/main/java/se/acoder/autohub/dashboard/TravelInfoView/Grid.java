@@ -18,7 +18,7 @@ import se.acoder.autohub.dashboard.DrawView;
  */
 
 public class Grid extends DrawView {
-    private int speedWidth = 200;
+
     private int vMid = 30;
 
     private Paint linePaint, bgPaint;
@@ -74,19 +74,5 @@ public class Grid extends DrawView {
 
         canvas.drawPath(dash, bgPaint);
         canvas.drawPath(dash, linePaint);
-
-        Path speedMeter = new Path();
-        int startX = getWidth()/2;
-        speedMeter.moveTo(startX, 0);
-        speedMeter.lineTo(startX + toPx(speedWidth, r)/2, 0);
-        speedMeter.lineTo(startX + toPx(speedWidth, r)/2+ toPx(50, r), toPx(vMid, r));
-        speedMeter.lineTo(startX + toPx(speedWidth, r)/2, toPx(2*vMid, r));
-        speedMeter.lineTo(startX - toPx(speedWidth, r)/2, toPx(2*vMid, r));
-        speedMeter.lineTo(startX - toPx(speedWidth, r)/2- toPx(50, r), toPx(vMid, r));
-        speedMeter.lineTo(startX - toPx(speedWidth, r)/2, 0);
-        speedMeter.close();
-
-        canvas.drawPath(speedMeter, bgPaint);
-        canvas.drawPath(speedMeter, linePaint);
     }
 }
