@@ -1,4 +1,4 @@
-package se.acoder.autohub.products.InternetRadio;
+package se.acoder.autohub.hub.products.InternetRadio;
 
 import android.support.annotation.NonNull;
 

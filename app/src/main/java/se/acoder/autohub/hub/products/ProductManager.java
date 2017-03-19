@@ -1,4 +1,4 @@
-package se.acoder.autohub.products;
+package se.acoder.autohub.hub.products;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,10 +8,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import se.acoder.autohub.products.AppShop.AppShop;
-import se.acoder.autohub.products.InternetRadio.InternetRadioProduct;
-import se.acoder.autohub.products.NavigationProduct.NavigationProduct;
-import se.acoder.autohub.products.Phone.PhoneProduct;
+import se.acoder.autohub.hub.products.AppShop.AppShop;
+import se.acoder.autohub.hub.products.InternetRadio.InternetRadioProduct;
+import se.acoder.autohub.hub.products.NavigationProduct.NavigationProduct;
+import se.acoder.autohub.hub.products.Phone.PhoneProduct;
 
 /**
  * Created by Johannes Westlund on 2017-03-16.

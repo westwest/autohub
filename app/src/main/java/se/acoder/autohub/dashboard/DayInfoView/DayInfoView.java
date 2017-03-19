@@ -1,4 +1,4 @@
-package se.acoder.autohub.frontend.CustomViews.DayInfoView;
+package se.acoder.autohub.dashboard.DayInfoView;
 
 import android.content.Context;
 import android.util.AttributeSet;

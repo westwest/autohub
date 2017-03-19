@@ -1,15 +1,9 @@
-package se.acoder.autohub.frontend.CustomViews.TravelInfoView;
+package se.acoder.autohub.dashboard.TravelInfoView;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import se.acoder.autohub.R;

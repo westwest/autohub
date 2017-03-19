@@ -1,4 +1,4 @@
-package se.acoder.autohub.products;
+package se.acoder.autohub.hub.products;
 
 import android.support.v4.app.Fragment;
 

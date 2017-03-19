@@ -1,9 +1,9 @@
-package se.acoder.autohub.products.NavigationProduct;
+package se.acoder.autohub.hub.products.NavigationProduct;
 
 import android.support.v4.app.Fragment;
 
 import se.acoder.autohub.R;
-import se.acoder.autohub.products.Product;
+import se.acoder.autohub.hub.products.Product;
 
 /**
  * Created by Johannes on 2017-03-17.

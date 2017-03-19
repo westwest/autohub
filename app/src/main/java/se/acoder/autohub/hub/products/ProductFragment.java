@@ -1,4 +1,4 @@
-package se.acoder.autohub.products;
+package se.acoder.autohub.hub.products;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -26,7 +26,14 @@ public class ProductFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.product_view_layout, container, false);
+        View rootView = inflater.inflate(R.layout.product_view_layout, container, false);
+        rootView.findViewById(R.id.btn_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+        return rootView;
     }
 
     protected SharedPreferences getStoredProductStates(){

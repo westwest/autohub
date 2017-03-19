@@ -1,4 +1,4 @@
-package se.acoder.autohub.frontend.CustomViews;
+package se.acoder.autohub.dashboard;
 
 import android.annotation.TargetApi;
 import android.content.Context;

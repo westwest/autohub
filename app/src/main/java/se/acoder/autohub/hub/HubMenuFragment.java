@@ -1,40 +1,31 @@
-package se.acoder.autohub.activities;
+package se.acoder.autohub.hub;
 
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewGroupCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 import se.acoder.autohub.R;
-import se.acoder.autohub.products.Product;
-import se.acoder.autohub.products.ProductManager;
+import se.acoder.autohub.hub.products.Product;
+import se.acoder.autohub.hub.products.ProductManager;
 
 /**
  * Created by Johannes Westlund on 2017-03-16.
  */
 
-public class MainMenuFragment extends Fragment {
+public class HubMenuFragment extends Fragment {
     ProductManager PM;
     ViewGroup rootView;
 

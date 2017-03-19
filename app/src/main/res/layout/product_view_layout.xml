@@ -6,19 +6,21 @@
         android:id="@+id/product_view"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_above="@+id/fragment"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/btn_back">
 
     </FrameLayout>
 
-    <fragment
-        android:id="@+id/fragment"
-        android:name="se.acoder.autohub.activities.MenuNavFragment"
+    <TextView
+        android:id="@+id/btn_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:text="Back"
+        android:drawableLeft="@drawable/ic_arrow_back"
+        android:textSize="20sp"
+        android:padding="10dp"/>
 
 </RelativeLayout>

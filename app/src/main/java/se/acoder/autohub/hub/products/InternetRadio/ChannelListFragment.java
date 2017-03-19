@@ -1,4 +1,4 @@
-package se.acoder.autohub.products.InternetRadio;
+package se.acoder.autohub.hub.products.InternetRadio;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -6,7 +6,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,7 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import se.acoder.autohub.R;
-import se.acoder.autohub.products.ProductFragment;
+import se.acoder.autohub.hub.products.ProductFragment;
 
 /**
  * Created by Johannes Westlund on 2017-03-17.

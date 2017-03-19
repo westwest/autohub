@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="se.acoder.autohub.activities.MainHub"
+    tools:context="se.acoder.autohub.HubApp"
     tools:layout_editor_absoluteY="25dp"
     tools:layout_editor_absoluteX="0dp"
     android:background="#333">
@@ -13,7 +13,7 @@
         android:id="@+id/mainView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="30dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginTop="50dp"
@@ -28,12 +28,12 @@
 
     <view
         android:id="@+id/diView"
-        class="se.acoder.autohub.frontend.CustomViews.DayInfoView.DayInfoView"
+        class="se.acoder.autohub.dashboard.DayInfoView.DayInfoView"
         android:layout_width="0dp"
         android:layout_height="wrap_content" />
 
     <view
-        class="se.acoder.autohub.frontend.CustomViews.TravelInfoView.TravelInfoView"
+        class="se.acoder.autohub.dashboard.TravelInfoView.TravelInfoView"
         android:id="@+id/tiView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

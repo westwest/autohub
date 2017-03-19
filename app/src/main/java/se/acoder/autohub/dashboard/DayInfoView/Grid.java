@@ -1,31 +1,26 @@
-package se.acoder.autohub.frontend.CustomViews.TravelInfoView;
+package se.acoder.autohub.dashboard.DayInfoView;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.view.View;
-
-import java.lang.annotation.Target;
 
 import se.acoder.autohub.R;
-import se.acoder.autohub.frontend.CustomViews.DrawView;
+import se.acoder.autohub.dashboard.DrawView;
 
 /**
- * Created by Johannes Westlund on 2017-03-14.
+ * Created by johves on 2017-03-15.
  */
 
 public class Grid extends DrawView {
-    private int speedWidth = 200;
-    private int vMid = 30;
-
-    private Paint linePaint, bgPaint;
+    private int height = 50;
+    private Paint linePaint;
+    private Paint bgPaint;
 
     public Grid(Context context) {
         super(context);
@@ -61,7 +56,7 @@ public class Grid extends DrawView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-        setMeasuredDimension(parentWidth, (int) toPx(vMid*2, getResources()));
+        setMeasuredDimension(parentWidth, (int) toPx(height+2, getResources()));
     }
 
     @Override
@@ -70,27 +65,18 @@ public class Grid extends DrawView {
         Resources r = getResources();
 
         Path dash = new Path();
-        dash.moveTo(toPx(-10, r), toPx(vMid, r));
-        dash.lineTo(toPx(getWidth()+10, r), toPx(vMid, r));
-        dash.lineTo(toPx(getWidth()+10, r), toPx(2*vMid+10, r));
-        dash.lineTo(toPx(-10, r), toPx(2*vMid+10, r));
+        dash.moveTo(toPx(-10, r),toPx(-10, r));
+        dash.lineTo(toPx(-10, r),toPx(height/2, r));
+        dash.lineTo(toPx(0, r), toPx(height/2, r));
+        dash.lineTo(toPx(50, r), toPx(height, r));
+        dash.lineTo(getWidth()-toPx(50,r), toPx(height, r));
+        dash.lineTo(getWidth(), toPx(height/2, r));
+        dash.lineTo(getWidth()+ toPx(10, r), toPx(height/2, r));
+        dash.lineTo(getWidth()+ toPx(10, r), toPx(-10, r));
         dash.close();
 
         canvas.drawPath(dash, bgPaint);
         canvas.drawPath(dash, linePaint);
 
-        Path speedMeter = new Path();
-        int startX = getWidth()/2;
-        speedMeter.moveTo(startX, 0);
-        speedMeter.lineTo(startX + toPx(speedWidth, r)/2, 0);
-        speedMeter.lineTo(startX + toPx(speedWidth, r)/2+ toPx(50, r), toPx(vMid, r));
-        speedMeter.lineTo(startX + toPx(speedWidth, r)/2, toPx(2*vMid, r));
-        speedMeter.lineTo(startX - toPx(speedWidth, r)/2, toPx(2*vMid, r));
-        speedMeter.lineTo(startX - toPx(speedWidth, r)/2- toPx(50, r), toPx(vMid, r));
-        speedMeter.lineTo(startX - toPx(speedWidth, r)/2, 0);
-        speedMeter.close();
-
-        canvas.drawPath(speedMeter, bgPaint);
-        canvas.drawPath(speedMeter, linePaint);
     }
 }

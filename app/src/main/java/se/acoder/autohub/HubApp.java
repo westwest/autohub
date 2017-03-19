@@ -1,6 +1,7 @@
-package se.acoder.autohub.activities;
+package se.acoder.autohub;
 
 import android.Manifest;
+import android.app.Service;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -15,12 +16,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.WindowManager;
 
-import se.acoder.autohub.R;
-import se.acoder.autohub.products.Trip.TripManager;
-import se.acoder.autohub.frontend.CustomViews.DayInfoView.DayInfoView;
-import se.acoder.autohub.frontend.CustomViews.TravelInfoView.TravelInfoView;
+import se.acoder.autohub.hub.HubMenuFragment;
+import se.acoder.autohub.hub.products.Trip.TripManager;
+import se.acoder.autohub.dashboard.DayInfoView.DayInfoView;
+import se.acoder.autohub.dashboard.TravelInfoView.TravelInfoView;
 
-public class MainHub extends AppCompatActivity {
+public class HubApp extends AppCompatActivity {
     private DayInfoView dayInfo;
     private TravelInfoView travelInfo;
 
@@ -40,7 +41,7 @@ public class MainHub extends AppCompatActivity {
 
         FragmentManager FM = getSupportFragmentManager();
         FragmentTransaction FT = FM.beginTransaction();
-        MainMenuFragment mainMenu = new MainMenuFragment();
+        HubMenuFragment mainMenu = new HubMenuFragment();
         FT.add(R.id.mainView, mainMenu);
         FT.commit();
 
@@ -104,5 +105,9 @@ public class MainHub extends AppCompatActivity {
                 return;
             }
         }
+    }
+
+    public abstract class FeatureService extends Service {
+
     }
 }
