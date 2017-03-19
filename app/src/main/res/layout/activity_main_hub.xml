@@ -43,28 +43,30 @@
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="0dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/tiView"
         app:layout_constraintRight_toRightOf="@+id/tiView"
-        app:layout_constraintTop_toTopOf="@+id/tiView">
+        app:layout_constraintTop_toTopOf="@+id/tiView"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp">
 
-        <view
-            android:id="@+id/view2"
-            class="se.acoder.autohub.dashboard.spedometer.SpedometerView"
-            id="@+id/view"
+        <fragment
+            android:id="@+id/speedometer"
+            class="se.acoder.autohub.dashboard.spedometer.SpeedometerFragment"
             android:layout_width="220dp"
             android:layout_height="60dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="0dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            tools:layout="@layout/speedometer_layout" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

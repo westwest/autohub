@@ -60,7 +60,7 @@ public class HubApp extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 TM.computeLocation(location);
-                travelInfo.update(TM.getTripDistance(), location.getSpeed(), TM.getTripTime());
+                travelInfo.update(TM.getTripDistance(), TM.getTripTime());
             }
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -94,6 +94,24 @@ public class HubApp extends AppCompatActivity {
             return;
         }
         LM.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, LS);
+    }
+
+    /**
+     * GPS-request w mTime and mDistance set to 0.
+     * @param LM
+     * @param LS
+     */
+    public void requestGPS(LocationManager LM, LocationListener LS){
+        requestGPS(LM, 0, 0, LS);
+    }
+
+    public void requestGPS(LocationManager LM, int mTime, int mDistance, LocationListener LS){
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, GPS_REQUEST);
+            return;
+        }
+        LM.requestLocationUpdates(LocationManager.GPS_PROVIDER, mTime, mDistance, LS);
     }
 
     @Override
