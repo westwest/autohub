@@ -49,7 +49,7 @@ public class Channel implements Comparable<Channel>{
     }
 
     public static Channel deserialize(String csv){
-        String[] params = csv.split("^");
+        String[] params = csv.split("\\^");
         return new Channel(Integer.parseInt(params[0]), params[1], params[2]);
     }
 
@@ -57,7 +57,7 @@ public class Channel implements Comparable<Channel>{
     public boolean equals(Object obj) {
         if(obj instanceof Channel){
             Channel other = (Channel) obj;
-            return slot == other.slot;
+            return slot == other.slot && name == other.name;
         }
         return false;
     }

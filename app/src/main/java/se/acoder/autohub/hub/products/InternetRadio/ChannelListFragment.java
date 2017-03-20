@@ -2,10 +2,12 @@ package se.acoder.autohub.hub.products.InternetRadio;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -35,19 +37,33 @@ public class ChannelListFragment extends ProductFragment {
 
     private ListView channelList;
 
-    ArrayList<Channel> channels = new ArrayList<Channel>();
+    private ArrayList<Channel> channels = new ArrayList<Channel>();
     private Channel isPlaying;
+    private AudioManager AM;
     private MediaPlayer radio;
+
+    private final String KEY_PLAYING = "isPlaying";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String wasPlayingCSV = getStoredProductStates().getString(KEY_PLAYING, null);
+        Channel wasPlaying = null;
+        if(wasPlayingCSV != null){
+            wasPlaying = Channel.deserialize(wasPlayingCSV);
+        }
+
+        radio = new MediaPlayer();
+        AM = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        if(!AM.isMusicActive() && wasPlaying != null){
+            channelClicked(wasPlaying);
+        }
+
         Set<String> channelRaw = getStoredProductStates().getStringSet(KEY, new HashSet<String>());
         if (channelRaw.isEmpty())
             initDefaultChannels();
         else
             initChannels(channelRaw);
-        radio = new MediaPlayer();
     }
 
     @Nullable
@@ -69,11 +85,18 @@ public class ChannelListFragment extends ProductFragment {
         return rootView;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getStoredProductStates().edit().putString(KEY_PLAYING, isPlaying.serialize()).apply();
+
+    }
+
     private void channelClicked(final Channel channel){
         final Channel selected = channel;
-        final Channel previous = isPlaying;
         if(selected == isPlaying){
             radio.stop();
+            isPlaying = null;
         }else{
             radio.reset();
             radio.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -114,7 +137,7 @@ public class ChannelListFragment extends ProductFragment {
         for (Channel c : channels) {
             serialized.add(c.serialize());
         }
-        getStoredProductStates().edit().putStringSet(KEY, serialized);
+        getStoredProductStates().edit().putStringSet(KEY, serialized).apply();
     }
 
     private class ChannelsAdapter extends BaseAdapter {
