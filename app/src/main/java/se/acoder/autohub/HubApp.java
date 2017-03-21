@@ -2,11 +2,17 @@ package se.acoder.autohub;
 
 import android.Manifest;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -14,9 +20,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 
+import java.util.HashMap;
+
 import se.acoder.autohub.hub.HubMenuFragment;
+import se.acoder.autohub.hub.products.ProductService;
 import se.acoder.autohub.hub.products.Trip.TripManager;
 import se.acoder.autohub.dashboard.DayInfoView.DayInfoView;
 import se.acoder.autohub.dashboard.TravelInfoView.TravelInfoView;
@@ -24,6 +34,10 @@ import se.acoder.autohub.dashboard.TravelInfoView.TravelInfoView;
 public class HubApp extends AppCompatActivity {
     private DayInfoView dayInfo;
     private TravelInfoView travelInfo;
+
+    private SessionRequestReceiver SRReceiver;
+    private boolean srrRegistered = false;
+    private HashMap<Integer,IBinder> servicePool = new HashMap<>();
 
     private FragmentManager FM;
     private LocationManager LM;
@@ -33,13 +47,17 @@ public class HubApp extends AppCompatActivity {
     //Permission request constants
     private final int GPS_REQUEST = 1;
 
+    //Intent-keys
+    public static final String SERVICE_REQUEST_INTENT = "service_request_intent";
+    public static final String SERVICE_CREATION_INTENT = "service_creation_intent";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_hub);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        FragmentManager FM = getSupportFragmentManager();
+        FM = getSupportFragmentManager();
         FragmentTransaction FT = FM.beginTransaction();
         HubMenuFragment mainMenu = new HubMenuFragment();
         FT.add(R.id.mainView, mainMenu);
@@ -48,6 +66,8 @@ public class HubApp extends AppCompatActivity {
         dayInfo = (DayInfoView) findViewById(R.id.diView);
         travelInfo = (TravelInfoView) findViewById(R.id.tiView);
 
+        SRReceiver = new SessionRequestReceiver();
+        SRReceiver.registerSelf();
         LM = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     }
 
@@ -76,6 +96,22 @@ public class HubApp extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if(!srrRegistered) {
+            SRReceiver.registerSelf();
+            srrRegistered = true;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(SRReceiver);
+        srrRegistered = false;
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         LM.removeUpdates(LS);
@@ -85,6 +121,10 @@ public class HubApp extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         TM.endTrip();
+    }
+
+    public IBinder getServiceInterface(int serviceHash){
+        return servicePool.get(serviceHash);
     }
 
     private void registerGPS(){
@@ -125,7 +165,28 @@ public class HubApp extends AppCompatActivity {
         }
     }
 
-    public abstract class FeatureService extends Service {
+    private class SessionRequestReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Intent serviceCreator = intent.getParcelableExtra(SERVICE_CREATION_INTENT);
+            bindService(serviceCreator, new GenericServiceConnection(), BIND_AUTO_CREATE);
+        }
+        private void registerSelf(){
+            registerReceiver(SRReceiver, new IntentFilter(getPackageName() + "." + SERVICE_REQUEST_INTENT));
+        }
+    }
 
+    private class GenericServiceConnection implements ServiceConnection {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            ProductService boundService = ((ProductService.ProductServiceBinder)service).getBaseService();
+            servicePool.put(boundService.hashCode(), service);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
     }
 }

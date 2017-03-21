@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -25,6 +26,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import se.acoder.autohub.HubApp;
 import se.acoder.autohub.R;
 import se.acoder.autohub.hub.products.ProductFragment;
 
@@ -33,31 +35,19 @@ import se.acoder.autohub.hub.products.ProductFragment;
  */
 
 public class ChannelListFragment extends ProductFragment {
-    private final String KEY = "channel_presets";
-
-    private ListView channelList;
-
     private ArrayList<Channel> channels = new ArrayList<Channel>();
-    private Channel isPlaying;
-    private AudioManager AM;
-    private MediaPlayer radio;
+    private ListView channelList;
+    private RadioService.RadioInteraction radioInteraction;
 
-    private final String KEY_PLAYING = "isPlaying";
+    private final String KEY = "channel_presets";
+    // private final String KEY_PLAYING = "currentChannel";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String wasPlayingCSV = getStoredProductStates().getString(KEY_PLAYING, null);
-        Channel wasPlaying = null;
-        if(wasPlayingCSV != null){
-            wasPlaying = Channel.deserialize(wasPlayingCSV);
-        }
 
-        radio = new MediaPlayer();
-        AM = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-        if(!AM.isMusicActive() && wasPlaying != null){
-            channelClicked(wasPlaying);
-        }
+        HubApp activity = (HubApp) getActivity();
+        radioInteraction = (RadioService.RadioInteraction) activity.getServiceInterface(RadioService.class.toString().hashCode());
 
         Set<String> channelRaw = getStoredProductStates().getStringSet(KEY, new HashSet<String>());
         if (channelRaw.isEmpty())
@@ -78,41 +68,14 @@ public class ChannelListFragment extends ProductFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 channelClicked(channels.get(position));
-                adapter.setSelected(channels.get(position));
             }
         });
         productView.addView(channelList);
         return rootView;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getStoredProductStates().edit().putString(KEY_PLAYING, isPlaying.serialize()).apply();
-
-    }
-
     private void channelClicked(final Channel channel){
-        final Channel selected = channel;
-        if(selected == isPlaying){
-            radio.stop();
-            isPlaying = null;
-        }else{
-            radio.reset();
-            radio.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.start();
-                    isPlaying = selected;
-                }
-            });
-            try {
-                radio.setDataSource(selected.getUrl());
-                radio.prepareAsync();
-            } catch (IOException IOE){
-                IOE.printStackTrace();
-            }
-        }
+        radioInteraction.channelPressed(channel);
     }
 
     private void initDefaultChannels() {
@@ -143,21 +106,11 @@ public class ChannelListFragment extends ProductFragment {
     private class ChannelsAdapter extends BaseAdapter {
         Context context;
         ArrayList<Channel> channels;
-        Channel selected;
 
         ChannelsAdapter(Context context, ArrayList<Channel> channels){
             super();
             this.context = context;
             this.channels = channels;
-        }
-
-        public void setSelected(Channel channel){
-            if(selected == channel){
-                selected = null;
-            }else{
-                this.selected=channel;
-            }
-            notifyDataSetChanged();
         }
 
         @Override
@@ -187,6 +140,8 @@ public class ChannelListFragment extends ProductFragment {
             item.setGravity(Gravity.CENTER);
             item.setText(atPosition.toString());
             item.setTextSize(24);
+
+            Channel selected = radioInteraction.getCurrentChannel();
             if(selected != null && channels.indexOf(selected) == position) {
                 item.setTypeface(null, Typeface.BOLD);
                 item.setTextColor(primaryColor);

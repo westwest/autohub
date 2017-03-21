@@ -59,7 +59,7 @@ public class ProductManager {
                     list.add(new NavigationProduct());
                     break;
                 case P_RADIO:
-                    list.add(new InternetRadioProduct());
+                    list.add(new InternetRadioProduct(context));
                     break;
                 case P_SHOP:
                     list.add(new AppShop());
