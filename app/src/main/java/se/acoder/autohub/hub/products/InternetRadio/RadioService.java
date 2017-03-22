@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import se.acoder.autohub.hub.products.ProductService;
 
@@ -21,9 +23,11 @@ public class RadioService extends ProductService {
     private AudioManager.OnAudioFocusChangeListener audioFocusListener;
     private MediaPlayer radio;
 
-    private Channel currentChannel;
+    private Channel currentChannel, pendingChannel;
     private boolean isPaused = false;
     private int volume;
+
+    private List<RadioServiceListener> listeners;
 
     @Override
     public void onCreate() {
@@ -31,7 +35,7 @@ public class RadioService extends ProductService {
         AM = (AudioManager) getSystemService(AUDIO_SERVICE);
         volume = AM.getStreamVolume(AudioManager.STREAM_MUSIC);
         radio = new MediaPlayer();
-        Log.d("TEST", getClass().toString());
+        listeners = new LinkedList<RadioServiceListener>();
     }
 
     @Nullable
@@ -55,11 +59,13 @@ public class RadioService extends ProductService {
         currentChannel = null;
         isPaused = false;
         AM.abandonAudioFocus(audioFocusListener);
+        for(RadioServiceListener l : listeners){ l.onRadioStop(); }
     }
 
     private void handlePause(){
         radio.pause();
         isPaused = true;
+        for(RadioServiceListener l : listeners){ l.onRadioPause(); }
     }
 
     private void handlePlay(Channel channel){
@@ -68,6 +74,8 @@ public class RadioService extends ProductService {
         int canPlay = AM.requestAudioFocus(audioFocusListener,
                                            AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         if(canPlay == AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
+            pendingChannel = channel;
+            for(RadioServiceListener l : listeners){ l.onChannelPending(pendingChannel); }
             startMusic(channel);
         }
     }
@@ -82,7 +90,6 @@ public class RadioService extends ProductService {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mp.start();
-                    currentChannel = selected;
                 }
             });
             try {
@@ -91,6 +98,19 @@ public class RadioService extends ProductService {
             } catch (IOException IOE) {
                 IOE.printStackTrace();
             }
+            radio.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                @Override
+                public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                    switch(what){
+                        case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                            currentChannel = selected;
+                            pendingChannel = null;
+                            for(RadioServiceListener l : listeners){ l.onChannelStartsPlaying(currentChannel); }
+                            return true;
+                    }
+                    return false;
+                }
+            });
         }
     }
 
@@ -130,5 +150,22 @@ public class RadioService extends ProductService {
         public Channel getCurrentChannel(){
             return currentChannel;
         }
+        public Channel getPendingChannel(){
+            return pendingChannel;
+        }
+
+        public void registerRadioServiceListener(RadioServiceListener RSL){
+            listeners.add(RSL);
+        }
+        public void unregisterRadioServiceListener(RadioServiceListener RSL){
+            listeners.remove(RSL);
+        }
+    }
+
+    protected interface RadioServiceListener {
+        void onChannelPending(Channel channel);
+        void onChannelStartsPlaying(Channel channel);
+        void onRadioStop();
+        void onRadioPause();
     }
 }

@@ -57,7 +57,7 @@ public class Channel implements Comparable<Channel>{
     public boolean equals(Object obj) {
         if(obj instanceof Channel){
             Channel other = (Channel) obj;
-            return slot == other.slot && name == other.name;
+            return slot == other.slot && name.equals(other.name);
         }
         return false;
     }

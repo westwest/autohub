@@ -1,5 +1,10 @@
 package se.acoder.autohub.hub.products.InternetRadio;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.media.AudioManager;
@@ -20,6 +25,8 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +45,8 @@ public class ChannelListFragment extends ProductFragment {
     private ArrayList<Channel> channels = new ArrayList<Channel>();
     private ListView channelList;
     private RadioService.RadioInteraction radioInteraction;
+    private RadioService.RadioServiceListener RSL;
+    private Channel selected;
 
     private final String KEY = "channel_presets";
     // private final String KEY_PLAYING = "currentChannel";
@@ -48,6 +57,7 @@ public class ChannelListFragment extends ProductFragment {
 
         HubApp activity = (HubApp) getActivity();
         radioInteraction = (RadioService.RadioInteraction) activity.getServiceInterface(RadioService.class.toString().hashCode());
+        selected = radioInteraction.getCurrentChannel();
 
         Set<String> channelRaw = getStoredProductStates().getStringSet(KEY, new HashSet<String>());
         if (channelRaw.isEmpty())
@@ -70,8 +80,34 @@ public class ChannelListFragment extends ProductFragment {
                 channelClicked(channels.get(position));
             }
         });
+        RSL = new RadioService.RadioServiceListener(){
+            @Override
+            public void onChannelPending(Channel channel) {
+                adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onChannelStartsPlaying(Channel channel) {
+                adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onRadioStop() {
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onRadioPause() {
+
+            }
+        };
+        radioInteraction.registerRadioServiceListener(RSL);
         productView.addView(channelList);
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        radioInteraction.unregisterRadioServiceListener(RSL);
     }
 
     private void channelClicked(final Channel channel){
@@ -104,13 +140,17 @@ public class ChannelListFragment extends ProductFragment {
     }
 
     private class ChannelsAdapter extends BaseAdapter {
-        Context context;
-        ArrayList<Channel> channels;
+        private Context context;
+        private ArrayList<Channel> channels;
+
+        private int primaryColor, textColor;
 
         ChannelsAdapter(Context context, ArrayList<Channel> channels){
             super();
             this.context = context;
             this.channels = channels;
+            primaryColor = ContextCompat.getColor(context, R.color.colorPrimary);
+            textColor = 0xFFCCCCCC;
         }
 
         @Override
@@ -130,9 +170,9 @@ public class ChannelListFragment extends ProductFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            int primaryColor = ContextCompat.getColor(context, R.color.colorPrimary);
-
             Channel atPosition = getItem(position);
+            Channel playing = radioInteraction.getCurrentChannel();
+            Channel pending = radioInteraction.getPendingChannel();
 
             TextView item = new TextView(context);
             int padding = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()));
@@ -141,14 +181,33 @@ public class ChannelListFragment extends ProductFragment {
             item.setText(atPosition.toString());
             item.setTextSize(24);
 
-            Channel selected = radioInteraction.getCurrentChannel();
-            if(selected != null && channels.indexOf(selected) == position) {
+            if(playing != null && atPosition.equals(playing)) {
                 item.setTypeface(null, Typeface.BOLD);
                 item.setTextColor(primaryColor);
+            } else if(pending != null && atPosition.equals(pending)){
+                animatePending(pending, item);
             }else{
-                item.setTextColor(0xFFCCCCCC);
+                item.setTextColor(textColor);
             }
             return item;
+        }
+
+        private void animatePending(Channel channel, TextView textView){
+            final Channel pending = channel;
+            final TextView item = textView;
+            ValueAnimator pendingAnimation = ObjectAnimator.ofInt(item, "textColor", textColor, primaryColor);
+            pendingAnimation.setEvaluator(new ArgbEvaluator());
+            pendingAnimation.setDuration(500);
+            pendingAnimation.setRepeatCount(2);
+            pendingAnimation.setRepeatMode(ValueAnimator.REVERSE);
+            pendingAnimation.start();
+            pendingAnimation.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if(pending.equals(radioInteraction.getPendingChannel()))
+                        animatePending(pending, item);
+                }
+            });
         }
     }
 }
