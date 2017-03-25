@@ -95,6 +95,7 @@ public class SpeedometerView extends DrawView {
     }
 
     public void setSpeed(float speed){
-        this.speed = ((int)speed * 3.6) + "";
+        this.speed = Math.round(speed * 3.6) + "";
+        this.invalidate();
     }
 }
