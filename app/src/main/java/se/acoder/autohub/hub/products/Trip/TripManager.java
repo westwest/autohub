@@ -21,10 +21,6 @@ public class TripManager {
     }
 
     public void computeLocation(Location location){
-        if(!ongoing && lastSignificantLocation != null &&
-                lastSignificantLocation.distanceTo(location) > 50)
-            ongoing = true;
-
         if(ongoing) {
             if(lastSignificantLocation.distanceTo(location) > 50){
                 lastSignificantLocation = location;
@@ -35,15 +31,10 @@ public class TripManager {
             }
             distance += lastLocation.distanceTo(location);
             time += location.getTime() - lastLocation.getTime();
-        } else if(lastSignificantLocation != null){
-            if(lastSignificantLocation.distanceTo(location) > 50){
-                start = lastSignificantLocation;
-                ongoing = true;
-            } else if (lastSignificantLocation.getTime() > 10*1000){
-                lastSignificantLocation = null;
-            } else {
-                lastSignificantLocation = location;
-            }
+        }
+        if(!ongoing && location.getSpeed() > 10/3.6){
+            ongoing = true;
+            lastSignificantLocation = location;
         }
         lastLocation = location;
     }

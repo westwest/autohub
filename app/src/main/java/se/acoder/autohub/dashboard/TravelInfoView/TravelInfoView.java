@@ -60,11 +60,6 @@ public class TravelInfoView extends ConstraintLayout {
         return (distance/1000+"").substring(0,3) + " km";
     }
 
-    private String formatSpeed(float speed){
-        double km = speed * 3.6;
-        return Double.toString(km).substring(0,3) + " km/h";
-    }
-
     private String formatTime(long time){
         float tInMin = time/(60*1000);
         int fullHours = (int) tInMin/60;
