@@ -16,6 +16,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            buildConfigField "String", "open_weather_key", getWeatherKey("key", "dev")
+        }
     }
 }
 
@@ -28,4 +31,10 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:support-v4:25.2.0'
     testCompile 'junit:junit:4.12'
+}
+
+def getWeatherKey(String property, String type){
+    Properties properties = new Properties()
+    properties.load(new FileInputStream("C:/Programming/api_keys/open_weather_key_"+ type +".txt"))
+    return "\"" + properties.getProperty(property) +"\""
 }
