@@ -44,7 +44,7 @@ public class Grid extends DrawView {
         init(context);
     }
 
-    private void init(Context context){
+    protected void init(Context context){
         linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         linePaint.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
         linePaint.setStrokeWidth(4);

@@ -1,7 +1,6 @@
 package se.acoder.autohub;
 
 import android.Manifest;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -20,7 +19,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.WindowManager;
 
 import java.util.HashMap;
@@ -30,11 +28,9 @@ import se.acoder.autohub.dashboard.WeatherInfo.WeatherInfoManager;
 import se.acoder.autohub.hub.HubMenuFragment;
 import se.acoder.autohub.hub.products.ProductService;
 import se.acoder.autohub.hub.products.Trip.TripManager;
-import se.acoder.autohub.dashboard.DayInfoView.DayInfoView;
 import se.acoder.autohub.dashboard.TravelInfoView.TravelInfoView;
 
 public class HubApp extends AppCompatActivity {
-    private DayInfoView dayInfo;
     private TravelInfoView travelInfo;
 
     private SessionRequestReceiver SRReceiver;
@@ -67,7 +63,6 @@ public class HubApp extends AppCompatActivity {
         FT.add(R.id.mainView, mainMenu);
         FT.commit();
 
-        dayInfo = (DayInfoView) findViewById(R.id.diView);
         travelInfo = (TravelInfoView) findViewById(R.id.tiView);
 
         SRReceiver = new SessionRequestReceiver();

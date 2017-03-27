@@ -2,7 +2,4 @@
     <declare-styleable name="TravelInfoView">
         <attr name="tivString" format="string" />
     </declare-styleable>
-    <declare-styleable name="DayInfoView">
-        <attr name="divString" format="string" />
-    </declare-styleable>
 </resources>
