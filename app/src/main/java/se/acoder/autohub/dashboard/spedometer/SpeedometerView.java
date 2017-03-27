@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import se.acoder.autohub.R;
 import se.acoder.autohub.dashboard.DrawView;
@@ -20,46 +21,31 @@ import se.acoder.autohub.dashboard.DrawView;
  */
 
 public class SpeedometerView extends DrawView {
-    String speed = "0";
-    String unit = "km/h";
+    private String speed = "0";
+    private String unit = "km/h";
 
-    int textSize = 28;
-    float speedOffset, textHeight;
-
-    Paint bgPaint, linePaint;
-    TextPaint textPaint;
+    private final int textSize = 28;
+    private float speedOffset, textHeight;
 
     public SpeedometerView(Context context) {
         super(context);
-        init(context);
     }
 
     public SpeedometerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context);
     }
 
     public SpeedometerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
     }
 
     public SpeedometerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context);
     }
 
-    private void init(Context context){
-        linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        linePaint.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
-        linePaint.setStrokeWidth(4);
-        linePaint.setStyle(Paint.Style.STROKE);
-
-        bgPaint = new Paint();
-        bgPaint.setColor(ContextCompat.getColor(context, android.R.color.background_dark));
-
-        textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.WHITE);
+    @Override
+    protected void init(Context context){
+        super.init(context);
         textPaint.setTextSize(toPx(textSize,getResources()));
         textPaint.setTextAlign(Paint.Align.RIGHT);
 
