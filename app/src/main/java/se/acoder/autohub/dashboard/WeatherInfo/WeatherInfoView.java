@@ -5,11 +5,14 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
+import android.webkit.WebView;
 
 import se.acoder.autohub.R;
 import se.acoder.autohub.dashboard.DrawView;
@@ -23,6 +26,8 @@ public class WeatherInfoView extends DrawView {
     private String tempUnit = "°C";
     private String location = "";
     private Drawable icon;
+
+    private Drawable wIce, wWind, wVisibility;
 
     private int textBaseLine;
 
@@ -46,6 +51,13 @@ public class WeatherInfoView extends DrawView {
     protected void init(Context context){
         super.init(context);
         icon = ContextCompat.getDrawable(getContext(),android.R.drawable.ic_menu_gallery);
+
+        wIce = ContextCompat.getDrawable(context, R.drawable.ic_weather_cold);
+        setColorForAlerts(wIce,false);
+        wWind = ContextCompat.getDrawable(context, R.drawable.ic_weather_flag);
+        setColorForAlerts(wWind,false);
+        wVisibility = ContextCompat.getDrawable(context, R.drawable.ic_weather_visibility);
+        setColorForAlerts(wVisibility,false);
     }
 
     public void setTemp(String temp){
@@ -61,24 +73,62 @@ public class WeatherInfoView extends DrawView {
         invalidate();
     }
 
+    public void toggleAlert(Alerts alert, boolean toggle){
+        switch (alert){
+            case Cold:
+                setColorForAlerts(wIce, toggle);
+                break;
+            case Wind:
+                setColorForAlerts(wWind, toggle);
+                break;
+            case Visibility:
+                setColorForAlerts(wVisibility, toggle);
+                break;
+        }
+        invalidate();
+    }
+
+    private void setColorForAlerts(Drawable icon, boolean toggle){
+        int on = ContextCompat.getColor(getContext(), R.color.colorPrimary);
+        int off = ContextCompat.getColor(getContext(), R.color.colorDashInscript);
+
+        if(toggle)
+            DrawableCompat.setTint(icon,on);
+        else
+            DrawableCompat.setTint(icon,off);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         float skewDelta = getWidth()*0.05f;
 
+        drawDash(canvas, skewDelta);
+
+        int size = (int)toPx(30, getResources());
+        int margin = (int)toPx(15, getResources());
+        wVisibility.setBounds(getWidth()-(int)skewDelta-size-margin, getHeight()/2-size/2, getWidth()-(int)skewDelta-margin, getHeight()/2+size/2);
+        wVisibility.draw(canvas);
+        wWind.setBounds(getWidth()-(int)skewDelta-2*size-2*margin, getHeight()/2-size/2, getWidth()-(int)skewDelta-size-2*margin, getHeight()/2+size/2);
+        wWind.draw(canvas);
+        wIce.setBounds(getWidth()-(int)skewDelta-3*size-3*margin, getHeight()/2-size/2, getWidth()-(int)skewDelta-2*size-3*margin, getHeight()/2+size/2);
+        wIce.draw(canvas);
+
+
+        drawWeatherWidget(canvas, skewDelta);
+    }
+
+    private void drawWeatherWidget(Canvas canvas, float skewDelta){
         int left = (int)skewDelta;;
         int size = (int)toPx(40, getResources());
         int margin = (int)toPx(6, getResources());
         icon.setBounds(left, 0, left+size, size);
+        icon.draw(canvas);
 
-        drawDash(canvas, skewDelta);
         textPaint.setTextSize(toPx(22,getResources()));
         canvas.drawText(temp+" "+tempUnit, skewDelta+size+margin, margin+toPx(20,getResources()), textPaint);
         textPaint.setTextSize(toPx(16,getResources()));
         canvas.drawText(location, skewDelta+margin, getHeight()/2+toPx(20, getResources()), textPaint);
-
-
-        icon.draw(canvas);
     }
 
     private void drawDash(Canvas canvas, float skewDelta){
@@ -102,5 +152,9 @@ public class WeatherInfoView extends DrawView {
 
         canvas.drawPath(dash, bgPaint);
         canvas.drawPath(dash, linePaint);
+    }
+
+    public enum Alerts {
+        Cold, Wind, Visibility
     }
 }

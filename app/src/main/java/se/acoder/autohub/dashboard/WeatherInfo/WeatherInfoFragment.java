@@ -20,6 +20,8 @@ public class WeatherInfoFragment extends Fragment {
     private WeatherInfoManager WIM;
     private WeatherInfoManager.WeatherInfoListener WIL;
 
+    private boolean wCold, wWind, wVisibility;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +42,10 @@ public class WeatherInfoFragment extends Fragment {
         WIM.requestUpdates(new WeatherInfoManager.WeatherInfoListener() {
             @Override
             public void onInfoUpdate(WeatherInfo weatherInfo) {
-                weatherInfoView.setTemp(weatherInfo.getTempMetric());
+                weatherInfoView.setTemp(weatherInfo.getTempMetric()+"");
                 weatherInfoView.setIcon(weatherInfo.getIcon());
                 weatherInfoView.setLocation(weatherInfo.getLocation());
+                checkAlerts(weatherInfo);
             }
         });
     }
@@ -51,5 +54,29 @@ public class WeatherInfoFragment extends Fragment {
     public void onStop() {
         super.onStop();
         WIM.unregisterUpdates(WIL);
+    }
+
+    private void checkAlerts(WeatherInfo weatherInfo){
+        if(!wCold && weatherInfo.getTempMetric() < 4){
+            wCold = true;
+            weatherInfoView.toggleAlert(WeatherInfoView.Alerts.Cold, wCold);
+        } else if(wCold && weatherInfo.getTempMetric() > 4){
+            wCold = false;
+            weatherInfoView.toggleAlert(WeatherInfoView.Alerts.Cold, wCold);
+        }
+        if(!wWind && weatherInfo.getWindSpeed() > 18){
+            wWind = true;
+            weatherInfoView.toggleAlert(WeatherInfoView.Alerts.Wind, wWind);
+        } else if(wWind && weatherInfo.getWindSpeed() < 18){
+            wWind = false;
+            weatherInfoView.toggleAlert(WeatherInfoView.Alerts.Wind, wWind);
+        }
+        if(!wVisibility && weatherInfo.getVisibility() < 500){
+            wVisibility = true;
+            weatherInfoView.toggleAlert(WeatherInfoView.Alerts.Visibility, wVisibility);
+        } else if(wVisibility && weatherInfo.getVisibility() > 500){
+            wVisibility = false;
+            weatherInfoView.toggleAlert(WeatherInfoView.Alerts.Visibility, wVisibility);
+        }
     }
 }

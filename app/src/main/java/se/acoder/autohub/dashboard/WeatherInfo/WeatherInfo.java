@@ -24,11 +24,11 @@ public class WeatherInfo {
     public double getTempKelvin(){
         return absTemp;
     }
-    public String getTempMetric(){
-        return Math.round(absTemp-273.15)+"";
+    public int getTempMetric(){
+        return (int)Math.round(absTemp-273.15);
     }
 
-    public double getWindSpeedt(){
+    public double getWindSpeed(){
         return windSpeed;
     }
 
