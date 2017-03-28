@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -17,6 +19,12 @@ import se.acoder.autohub.dashboard.DrawView;
  */
 
 public class WeatherInfoView extends DrawView {
+    private String temp = "-";
+    private String tempUnit = "°C";
+    private String location = "";
+    private Drawable icon;
+
+    private int textBaseLine;
 
     public WeatherInfoView(Context context) {
         super(context);
@@ -37,13 +45,44 @@ public class WeatherInfoView extends DrawView {
     @Override
     protected void init(Context context){
         super.init(context);
+        icon = ContextCompat.getDrawable(getContext(),android.R.drawable.ic_menu_gallery);
+    }
+
+    public void setTemp(String temp){
+        this.temp = temp;
+        invalidate();
+    }
+    public void setLocation(String location){
+        this.location = location;
+        invalidate();
+    }
+    public void setIcon(Drawable icon){
+        this.icon = icon;
+        invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Resources r = getResources();
         float skewDelta = getWidth()*0.05f;
+
+        int left = (int)skewDelta;;
+        int size = (int)toPx(40, getResources());
+        int margin = (int)toPx(6, getResources());
+        icon.setBounds(left, 0, left+size, size);
+
+        drawDash(canvas, skewDelta);
+        textPaint.setTextSize(toPx(22,getResources()));
+        canvas.drawText(temp+" "+tempUnit, skewDelta+size+margin, margin+toPx(20,getResources()), textPaint);
+        textPaint.setTextSize(toPx(16,getResources()));
+        canvas.drawText(location, skewDelta+margin, getHeight()/2+toPx(20, getResources()), textPaint);
+
+
+        icon.draw(canvas);
+    }
+
+    private void drawDash(Canvas canvas, float skewDelta){
+        Resources r = getResources();
         int clockWidth = 80;
 
         Path dash = new Path();

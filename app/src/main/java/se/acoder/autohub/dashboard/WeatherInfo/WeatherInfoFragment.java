@@ -15,6 +15,8 @@ import se.acoder.autohub.R;
  */
 
 public class WeatherInfoFragment extends Fragment {
+    private WeatherInfoView weatherInfoView;
+
     private WeatherInfoManager WIM;
     private WeatherInfoManager.WeatherInfoListener WIL;
 
@@ -28,6 +30,7 @@ public class WeatherInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.weatherinfo_layout, container, false);
+        weatherInfoView = (WeatherInfoView) rootView.findViewById(R.id.weatherDash);
         return rootView;
     }
 
@@ -37,7 +40,9 @@ public class WeatherInfoFragment extends Fragment {
         WIM.requestUpdates(new WeatherInfoManager.WeatherInfoListener() {
             @Override
             public void onInfoUpdate(WeatherInfo weatherInfo) {
-                Log.d("TEST", weatherInfo.toString());
+                weatherInfoView.setTemp(weatherInfo.getTempMetric());
+                weatherInfoView.setIcon(weatherInfo.getIcon());
+                weatherInfoView.setLocation(weatherInfo.getLocation());
             }
         });
     }

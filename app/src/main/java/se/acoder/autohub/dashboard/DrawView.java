@@ -54,13 +54,14 @@ public abstract class DrawView extends View {
     }
 
     protected void init(Context context){
+        setWillNotDraw(false);
         linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         linePaint.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
         linePaint.setStrokeWidth(4);
         linePaint.setStyle(Paint.Style.STROKE);
 
         bgPaint = new Paint();
-        bgPaint.setColor(ContextCompat.getColor(context, android.R.color.background_dark));
+        bgPaint.setColor(ContextCompat.getColor(context, R.color.colorDashBackground));
 
         textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.WHITE);

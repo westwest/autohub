@@ -102,6 +102,7 @@ public class WeatherInfoManager {
                 return new WeatherInfo(weatherData.getJSONObject("main").getDouble("temp"),
                                        weatherData.getJSONObject("wind").getDouble("speed"),
                                        weatherData.getInt("visibility"),
+                                       weatherData.getString("name"),
                                        icon);
             } catch (MalformedURLException ME){
                 Log.d(this.getClass().toString(), ME.getCause().toString());
