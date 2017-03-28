@@ -23,8 +23,6 @@ import android.view.WindowManager;
 
 import java.util.HashMap;
 
-import se.acoder.autohub.dashboard.WeatherInfo.WeatherInfo;
-import se.acoder.autohub.dashboard.WeatherInfo.WeatherInfoManager;
 import se.acoder.autohub.hub.HubMenuFragment;
 import se.acoder.autohub.hub.products.ProductService;
 import se.acoder.autohub.hub.products.Trip.TripManager;
@@ -41,8 +39,6 @@ public class HubApp extends AppCompatActivity {
     private LocationManager LM;
     private LocationListener LS;
     private TripManager TM;
-    private WeatherInfoManager WIM;
-    private WeatherInfoManager.WeatherInfoReceiver WIR;
 
     //Permission request constants
     private final int GPS_REQUEST = 1;
@@ -68,19 +64,11 @@ public class HubApp extends AppCompatActivity {
         SRReceiver = new SessionRequestReceiver();
         SRReceiver.registerSelf();
         LM = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        WIM = new WeatherInfoManager(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        WIM.requestUpdates(new WeatherInfoManager.WeatherInfoReceiver() {
-            @Override
-            public void onInfoUpdate(WeatherInfo weatherInfo) {
-
-            }
-        });
 
         TM = new TripManager();
 
@@ -123,7 +111,7 @@ public class HubApp extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         LM.removeUpdates(LS);
-        // WIM.endUpdates(null);
+        // WIM.unregisterUpdates(null);
     }
 
     @Override

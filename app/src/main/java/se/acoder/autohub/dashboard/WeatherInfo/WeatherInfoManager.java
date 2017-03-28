@@ -1,6 +1,9 @@
 package se.acoder.autohub.dashboard.WeatherInfo;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -30,7 +33,7 @@ import se.acoder.autohub.HubApp;
 public class WeatherInfoManager {
     private final String key = BuildConfig.open_weather_key;
     public static final String weatherUrl = "http://api.openweathermap.org/data/2.5/weather";
-    public static final String imageUrl = "http://api.openweathermap.org/";
+    public static final String iconBaseUrl = "http://api.openweathermap.org/img/w/";
     private final int minutesInMs = 1000*60;
 
     private static boolean isRunning;
@@ -41,7 +44,7 @@ public class WeatherInfoManager {
     private LocationListener LS;
     private Location lastReqLocation;
 
-    private static List<WeatherInfoReceiver> listeners = new ArrayList<>();
+    private static List<WeatherInfoListener> listeners = new ArrayList<>();
 
     public WeatherInfoManager(Context context){
         final HubApp activity = (HubApp) context;
@@ -66,7 +69,7 @@ public class WeatherInfoManager {
         };
     }
 
-    public void requestUpdates(WeatherInfoReceiver receiver){
+    public void requestUpdates(WeatherInfoListener receiver){
         listeners.add(receiver);
         if(!isRunning){
             ((HubApp) context).requestGPS(LM,LS);
@@ -74,7 +77,7 @@ public class WeatherInfoManager {
         }
     }
 
-    public void endUpdates(WeatherInfoReceiver receiver){
+    public void unregisterUpdates(WeatherInfoListener receiver){
         listeners.remove(receiver);
         if(listeners.size() == 0) {
             isRunning = false;
@@ -86,10 +89,26 @@ public class WeatherInfoManager {
         @Override
         protected WeatherInfo doInBackground(Location... params) {
             Location l = params[0];
-            HttpURLConnection httpCon = setupConnection(weatherUrl +
-                    "?lat=" + l.getLatitude() + "&lon=" + l.getLongitude() + "&appid=" + key);
             try {
-                return WeatherInfo.parseWeatherData(new JSONObject(readData(httpCon)));
+                HttpURLConnection weatherDataConnection = setupConnection(weatherUrl +
+                    "?lat=" + l.getLatitude() + "&lon=" + l.getLongitude() + "&appid=" + key);
+
+                JSONObject weatherData = new JSONObject(readWeatherJSON(weatherDataConnection));
+
+                String iconId =  weatherData.getJSONArray("weather").getJSONObject(0).getString("icon");
+                HttpURLConnection iconConnection = setupConnection(iconBaseUrl + iconId + ".png");
+                Drawable icon = downloadIcon(iconConnection);
+
+                return new WeatherInfo(weatherData.getJSONObject("main").getDouble("temp"),
+                                       weatherData.getJSONObject("wind").getDouble("speed"),
+                                       weatherData.getInt("visibility"),
+                                       icon);
+            } catch (MalformedURLException ME){
+                Log.d(this.getClass().toString(), ME.getCause().toString());
+                ME.printStackTrace();
+            } catch (IOException IOE){
+                Log.d(this.getClass().toString(), IOE.getCause().toString());
+                IOE.printStackTrace();
             } catch (JSONException JSONE){
                 Log.d(this.getClass().toString(), JSONE.getCause().toString());
                 JSONE.printStackTrace();
@@ -97,46 +116,39 @@ public class WeatherInfoManager {
             return null;
         }
 
-        private HttpURLConnection setupConnection(String url){
-            try {
-                URL request = new URL(url);
-                HttpURLConnection httpCon = (HttpURLConnection) request.openConnection();
-                httpCon.setRequestMethod("GET");
-                httpCon.setConnectTimeout(5000);
-                httpCon.setReadTimeout(10000);
-                httpCon.connect();
-                return httpCon;
-            }catch (MalformedURLException ME){
-                Log.d(this.getClass().toString(), ME.getCause().toString());
-                ME.printStackTrace();
-            } catch (IOException IOE){
-                Log.d(this.getClass().toString(), IOE.getCause().toString());
-                IOE.printStackTrace();
-            }
-            return null;
+        @Override
+        protected void onPostExecute(WeatherInfo weatherInfo) {
+            for(WeatherInfoListener l : listeners){ l.onInfoUpdate(weatherInfo); }
         }
 
-        private String readData(HttpURLConnection httpCon){
-            String JSONStr = new String();
-            try {
-                BufferedReader br = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
+        private HttpURLConnection setupConnection(String url) throws IOException{
+            URL request = new URL(url);
+            HttpURLConnection httpCon = (HttpURLConnection) request.openConnection();
+            httpCon.setRequestMethod("GET");
+            httpCon.setConnectTimeout(5000);
+            httpCon.setReadTimeout(10000);
+            httpCon.connect();
+            return httpCon;
+        }
 
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while((line = br.readLine()) != null){
-                    sb.append(line + "\n");
-                }
-                br.close();
-                JSONStr = sb.toString();
-            }catch (IOException IOE){
-                Log.d(this.getClass().toString(), IOE.getCause().toString());
-                IOE.printStackTrace();
+        private String readWeatherJSON(HttpURLConnection httpCon) throws IOException {
+            BufferedReader br = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while((line = br.readLine()) != null){
+                sb.append(line + "\n");
             }
-            return JSONStr;
+            br.close();
+            return sb.toString();
+        }
+
+        private Drawable downloadIcon(HttpURLConnection httpCon) throws IOException {
+            return new BitmapDrawable(context.getResources(),
+                                      BitmapFactory.decodeStream(httpCon.getInputStream()));
         }
     }
 
-    public interface WeatherInfoReceiver {
+    public interface WeatherInfoListener {
         public void onInfoUpdate(WeatherInfo weatherInfo);
     }
 }
