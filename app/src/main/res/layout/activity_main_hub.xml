@@ -60,7 +60,7 @@
 
         <fragment
             android:id="@+id/speedometer"
-            class="se.acoder.autohub.dashboard.spedometer.SpeedometerFragment"
+            class="se.acoder.autohub.dashboard.speedometer.SpeedometerFragment"
             android:layout_width="220dp"
             android:layout_height="60dp"
             app:layout_constraintLeft_toLeftOf="parent"

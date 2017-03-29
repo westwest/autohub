@@ -1,19 +1,14 @@
-package se.acoder.autohub.dashboard.spedometer;
+package se.acoder.autohub.dashboard.speedometer;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 
-import se.acoder.autohub.R;
 import se.acoder.autohub.dashboard.DrawView;
 
 /**

@@ -1,4 +1,4 @@
-package se.acoder.autohub.dashboard.spedometer;
+package se.acoder.autohub.dashboard.speedometer;
 
 import android.content.Context;
 import android.location.Location;
@@ -7,7 +7,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
