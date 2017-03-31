@@ -13,7 +13,7 @@
         android:layout_weight="0.5"
         android:weightSum="3"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="4dp">
 
         <TextView
             android:id="@+id/textView16"
@@ -60,8 +60,8 @@
         android:layout_height="fill_parent"
         android:layout_weight="0.5"
         android:orientation="vertical"
-        android:layout_margin="8dp"
-        android:padding="24dp"
+        android:layout_margin="4dp"
+        android:padding="12dp"
         android:background="@android:drawable/alert_dark_frame" >
 
         <TextView

@@ -17,6 +17,6 @@ public class PhoneProduct extends Product {
 
     @Override
     public Fragment bootstrap() {
-        return null;
+        return new PhoneHubFragment();
     }
 }
