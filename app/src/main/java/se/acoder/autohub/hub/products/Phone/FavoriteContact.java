@@ -57,9 +57,11 @@ public class FavoriteContact extends SlottedItem{
             Uri uri = Uri.parse(super.getIdentifier());
             Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
             int imgUriIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI);
-            cursor.moveToFirst();
             try {
-                return context.getContentResolver().openInputStream(Uri.parse(cursor.getString(imgUriIndex)));
+                cursor.moveToFirst();
+                String thumbUri = cursor.getString(imgUriIndex);
+                if(thumbUri != null)
+                    return context.getContentResolver().openInputStream(Uri.parse(thumbUri));
             } catch (FileNotFoundException FNFE){
                 Log.d(FavoriteContact.class.toString(), FNFE.getCause().toString());
                 FNFE.printStackTrace();

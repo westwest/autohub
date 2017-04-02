@@ -114,8 +114,10 @@ public class PhoneHubFragment extends ProductFragment {
         favContacts[slot] = newContact;
         slots[slot].setText(newContact.getIdentifier());
         Drawable thumb = newContact.getDrawable();
-        thumb.setBounds(slots[slot].getCompoundDrawables()[0].getBounds());
-        slots[slot].setCompoundDrawables(thumb,null,null,null);
+        if(thumb != null){
+            thumb.setBounds(slots[slot].getCompoundDrawables()[0].getBounds());
+            slots[slot].setCompoundDrawables(thumb,null,null,null);
+        }
     }
 
     @Override
