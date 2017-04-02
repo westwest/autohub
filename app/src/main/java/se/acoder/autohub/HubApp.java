@@ -14,6 +14,7 @@ import android.location.LocationManager;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +23,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import java.util.HashMap;
+import java.util.List;
 
 import se.acoder.autohub.hub.HubMenuFragment;
 import se.acoder.autohub.hub.products.ProductService;
@@ -30,6 +32,7 @@ import se.acoder.autohub.dashboard.TravelInfoView.TravelInfoView;
 
 public class HubApp extends AppCompatActivity {
     private TravelInfoView travelInfo;
+    private HubMenuFragment mainMenu;
 
     private SessionRequestReceiver SRReceiver;
     private boolean srrRegistered = false;
@@ -41,7 +44,8 @@ public class HubApp extends AppCompatActivity {
     private TripManager TM;
 
     //Permission request constants
-    private final int GPS_REQUEST = 1;
+    public static final int GPS_REQUEST = 1;
+    public static final int PHONE_GATE_REQUEST = 2;
 
     //Intent-keys
     public static final String SERVICE_REQUEST_INTENT = "service_request_intent";
@@ -55,7 +59,7 @@ public class HubApp extends AppCompatActivity {
 
         FM = getSupportFragmentManager();
         FragmentTransaction FT = FM.beginTransaction();
-        HubMenuFragment mainMenu = new HubMenuFragment();
+        mainMenu = new HubMenuFragment();
         FT.add(R.id.mainView, mainMenu);
         FT.commit();
 
@@ -111,7 +115,6 @@ public class HubApp extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         LM.removeUpdates(LS);
-        // WIM.unregisterUpdates(null);
     }
 
     @Override
@@ -162,6 +165,16 @@ public class HubApp extends AppCompatActivity {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     registerGPS();
                 return;
+            }
+        }
+        notifyFragmentsOfPermission(requestCode,permissions,grantResults);
+    }
+
+    private void notifyFragmentsOfPermission(int requestCode, String[] permissions, int[] grantResults){
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         }
     }

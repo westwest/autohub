@@ -32,5 +32,8 @@ public class InternetRadioProduct extends Product {
         WAS_PLAYING
     }
 
-
+    @Override
+    public boolean ensureGatePermission(Context context) {
+        return true;
+    }
 }

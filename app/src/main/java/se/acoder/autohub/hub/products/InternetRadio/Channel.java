@@ -26,7 +26,7 @@ public class Channel extends SlottedItem implements Comparable<Channel> {
 
     @Override
     public String toString() {
-        return getName();
+        return getIdentifier();
     }
 
     public String serialize(){

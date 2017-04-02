@@ -1,5 +1,6 @@
 package se.acoder.autohub.hub.products;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 
 /**
@@ -24,4 +25,15 @@ public abstract class Product {
     }
 
     public abstract Fragment bootstrap();
+
+    public abstract boolean ensureGatePermission(Context context);
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Product){
+            Product p = (Product) obj;
+            return this.name.equals(p.name);
+        }
+        return false;
+    }
 }

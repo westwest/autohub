@@ -1,5 +1,6 @@
 package se.acoder.autohub.hub.products.AppShop;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 
 import se.acoder.autohub.R;
@@ -18,5 +19,10 @@ public class AppShop extends Product {
     @Override
     public Fragment bootstrap() {
         return null;
+    }
+
+    @Override
+    public boolean ensureGatePermission(Context context) {
+        return true;
     }
 }

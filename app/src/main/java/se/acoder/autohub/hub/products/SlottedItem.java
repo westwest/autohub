@@ -10,29 +10,29 @@ public abstract class SlottedItem {
     private final static String DELIMITER = "^";
 
     private int slot;
-    private String name;
+    private String identifier;
 
-    public SlottedItem(int slot, String name){
+    public SlottedItem(int slot, String identifier){
         this.slot = slot;
-        this.name = name;
+        this.identifier = identifier;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setIdentifier(String name) {
+        this.identifier = name;
     }
 
     public int getSlot() {
         return slot;
     }
 
-    public String getName() {
-        return name;
+    public String getIdentifier() {
+        return identifier;
     }
 
     public String toCSV(String... params){
-        String csv = slot + DELIMITER + name + DELIMITER;
+        String csv = slot + DELIMITER + identifier;
         for(int i = 0; i<params.length; i++){
-            csv = csv+params[i]+DELIMITER;
+            csv = csv + DELIMITER + params[i];
         }
         return csv;
     }
@@ -45,7 +45,7 @@ public abstract class SlottedItem {
     public boolean equals(Object obj) {
         if(obj instanceof SlottedItem){
             SlottedItem other = (SlottedItem) obj;
-            return slot == other.slot && name.equals(other.name);
+            return slot == other.slot && identifier.equals(other.identifier);
         }
         return false;
     }

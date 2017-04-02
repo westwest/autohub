@@ -2,8 +2,11 @@ package se.acoder.autohub.hub;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -17,7 +20,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import se.acoder.autohub.HubApp;
 import se.acoder.autohub.R;
+import se.acoder.autohub.hub.products.Phone.PhoneProduct;
 import se.acoder.autohub.hub.products.Product;
 import se.acoder.autohub.hub.products.ProductManager;
 
@@ -45,11 +50,31 @@ public class HubMenuFragment extends Fragment {
         return rootView;
     }
 
+    public void triggerProductInit(Product product){
+        List<Product> products = PM.getProducts();
+        Product p = products.get(products.indexOf(product));
+        getActivity().getSupportFragmentManager().beginTransaction()
+                     .replace(R.id.mainView, p.bootstrap())
+                     .addToBackStack(p.getName()+"-entrypoint")
+                     .commitAllowingStateLoss();
+    }
+
     private void initProduct(Product p){
         getActivity().getSupportFragmentManager().beginTransaction()
                                                  .replace(R.id.mainView, p.bootstrap())
                                                  .addToBackStack(p.getName()+"-entrypoint")
                                                  .commit();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch(requestCode){
+            case HubApp.PHONE_GATE_REQUEST: {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    triggerProductInit(new PhoneProduct());
+            }
+        }
     }
 
     private class MenuPagerAdapter extends PagerAdapter{
@@ -94,7 +119,8 @@ public class HubMenuFragment extends Fragment {
                     slots[i].setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            initProduct(p);
+                            if(p.ensureGatePermission(getContext()))
+                                initProduct(p);
                         }
                     });
                 }else{
