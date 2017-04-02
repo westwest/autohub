@@ -2,13 +2,18 @@ package se.acoder.autohub.hub.products.Phone;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import se.acoder.autohub.R;
@@ -40,11 +45,11 @@ public class FavoriteContact extends SlottedItem{
     }
 
     public Drawable getDrawable(){
-        InputStream is = null;
+        InputStream is;
         if((is = getThumbnailStream()) != null){
             return Drawable.createFromStream(is, null);
         }
-        return ContextCompat.getDrawable(context, R.drawable.ic_generic_person);
+        return null;
     }
 
     private InputStream getThumbnailStream(){
@@ -53,14 +58,12 @@ public class FavoriteContact extends SlottedItem{
             Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
             int imgUriIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI);
             cursor.moveToFirst();
-            Uri thumbUri = Uri.parse(cursor.getString(imgUriIndex));
-            cursor = context.getContentResolver().query(thumbUri, null, null, null, null);
-            //int imgIndex = cursor.getColumnIndex();
-            cursor.moveToFirst();
-            for(int i = 0; i<cursor.getColumnCount(); i++){
-                Log.d("TEST", cursor.getColumnName(i));
+            try {
+                return context.getContentResolver().openInputStream(Uri.parse(cursor.getString(imgUriIndex)));
+            } catch (FileNotFoundException FNFE){
+                Log.d(FavoriteContact.class.toString(), FNFE.getCause().toString());
+                FNFE.printStackTrace();
             }
-            //return new ByteArrayInputStream(cursor.getBlob(imgIndex));
         }
         return null;
     }

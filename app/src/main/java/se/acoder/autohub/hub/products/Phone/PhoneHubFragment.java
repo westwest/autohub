@@ -3,6 +3,7 @@ package se.acoder.autohub.hub.products.Phone;
 import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -112,7 +113,9 @@ public class PhoneHubFragment extends ProductFragment {
         FavoriteContact newContact = new FavoriteContact(slot, data.getDataString(), getContext());
         favContacts[slot] = newContact;
         slots[slot].setText(newContact.getIdentifier());
-        slots[slot].setCompoundDrawablesWithIntrinsicBounds(newContact.getDrawable(),null,null,null);
+        Drawable thumb = newContact.getDrawable();
+        thumb.setBounds(slots[slot].getCompoundDrawables()[0].getBounds());
+        slots[slot].setCompoundDrawables(thumb,null,null,null);
     }
 
     @Override
