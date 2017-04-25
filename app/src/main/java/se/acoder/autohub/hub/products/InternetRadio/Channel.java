@@ -8,7 +8,7 @@ import se.acoder.autohub.hub.products.SlottedItem;
  * Created by Johannes Westlund on 2017-03-18.
  */
 
-public class Channel extends SlottedItem implements Comparable<Channel> {
+public class Channel extends SlottedItem {
     private String url;
 
     public Channel(int slot, String name, String url){
@@ -44,9 +44,4 @@ public class Channel extends SlottedItem implements Comparable<Channel> {
             return super.equals(obj);
         return false;
     }
-
-    public int compareTo(@NonNull Channel o) {
-        return getSlot() - o.getSlot();
-    }
-
 }

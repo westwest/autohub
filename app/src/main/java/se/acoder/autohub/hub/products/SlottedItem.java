@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
  * Created by Johannes Westlund on 2017-04-01.
  */
 
-public abstract class SlottedItem {
+public abstract class SlottedItem implements Comparable<SlottedItem> {
     private final static String DELIMITER = "^";
 
     private int slot;
@@ -48,5 +48,9 @@ public abstract class SlottedItem {
             return slot == other.slot && identifier.equals(other.identifier);
         }
         return false;
+    }
+
+    public int compareTo(@NonNull SlottedItem o) {
+        return getSlot() - o.getSlot();
     }
 }

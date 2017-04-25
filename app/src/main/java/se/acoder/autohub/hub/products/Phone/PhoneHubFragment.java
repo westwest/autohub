@@ -2,7 +2,6 @@ package se.acoder.autohub.hub.products.Phone;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -13,6 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import se.acoder.autohub.R;
 import se.acoder.autohub.hub.products.ProductFragment;
@@ -27,18 +32,19 @@ public class PhoneHubFragment extends ProductFragment {
     private final static String KEY = "favcontacts";
     private final static int RESULT_PICK_CONTACT_BASE = 210;
 
-    private FavoriteContact[] favContacts;
+    private ArrayList<FavoriteContact> favContacts = new ArrayList<>();
     private TextView[] slots = new TextView[3];
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FavoriteContact[] testdata = {new FavoriteContact(0,"Test Testsson", ""),
-                                      new FavoriteContact(0,"Prov Provsson", ""),
-                                      new FavoriteContact(0,"Try Trysson", "")};
-        favContacts = testdata;
-
+        Set<String> contactsRaw = getStoredProductStates().getStringSet(KEY, new HashSet<String>());
+        if(contactsRaw.isEmpty()){
+            initEmptyContacts();
+        } else {
+            initContacts(contactsRaw);
+        }
     }
 
     @Nullable
@@ -52,13 +58,29 @@ public class PhoneHubFragment extends ProductFragment {
         return rootView;
     }
 
+    private void initEmptyContacts(){
+        FavoriteContact[] contacts = new FavoriteContact[3];
+        for(int i=0; i<3; i++){
+            favContacts.add(new FavoriteContact(i, "Empty Slot", ""));
+        }
+        saveContacts();
+    }
+
+    private void initContacts(Set<String> contactsRaw){
+        for (String s : contactsRaw) {
+            favContacts.add(FavoriteContact.deserialize(s));
+        }
+        Collections.sort(favContacts);
+    }
+
     private void wireFavContacts(View phoneView){
         slots[0] = (TextView) phoneView.findViewById(R.id.favcontact0);
         slots[1] = (TextView) phoneView.findViewById(R.id.favcontact1);
         slots[2] = (TextView) phoneView.findViewById(R.id.favcontact2);
         for(int i = 0; i<slots.length; i++){
             final int index = i;
-            slots[i].setText(favContacts[i].getIdentifier());
+            slots[i].setText(favContacts.get(i).getIdentifier(getContext()));
+            setThumbToSlot(favContacts.get(i).getDrawable(getContext()), i);
             slots[i].setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -73,6 +95,14 @@ public class PhoneHubFragment extends ProductFragment {
                 }
             });
         }
+    }
+
+    private void saveContacts() {
+        Set<String> serialized = new HashSet<String>();
+        for(FavoriteContact c : favContacts){
+            serialized.add(c.serialize());
+        }
+        getStoredProductStates().edit().putStringSet(KEY, serialized).apply();
     }
 
     public Dialog createContactSlotDialog(final int slot){
@@ -110,10 +140,14 @@ public class PhoneHubFragment extends ProductFragment {
     }
 
     public void contactPickedForSlot(int slot, Intent data){
-        FavoriteContact newContact = new FavoriteContact(slot, data.getDataString(), getContext());
-        favContacts[slot] = newContact;
-        slots[slot].setText(newContact.getIdentifier());
-        Drawable thumb = newContact.getDrawable();
+        FavoriteContact newContact = new FavoriteContact(slot, data.getDataString());
+        favContacts.set(slot, newContact);
+        slots[slot].setText(newContact.getIdentifier(getContext()));
+        setThumbToSlot(newContact.getDrawable(getContext()), slot);
+        saveContacts();
+    }
+
+    private void setThumbToSlot(Drawable thumb, int slot){
         if(thumb != null){
             thumb.setBounds(slots[slot].getCompoundDrawables()[0].getBounds());
             slots[slot].setCompoundDrawables(thumb,null,null,null);
