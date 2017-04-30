@@ -2,15 +2,11 @@ package se.acoder.autohub.hub.products.Phone;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ScaleDrawable;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.Gravity;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -47,7 +43,7 @@ public class FavoriteContact extends SlottedItem{
                 return Drawable.createFromStream(is, null);
             }
         }
-        return null;
+        return ContextCompat.getDrawable(context, R.drawable.ic_generic_person);
     }
 
     private InputStream getThumbnailStream(Context context){
