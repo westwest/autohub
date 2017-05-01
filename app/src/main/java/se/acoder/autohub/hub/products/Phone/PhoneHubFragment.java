@@ -91,7 +91,8 @@ public class PhoneHubFragment extends ProductFragment {
             slots[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    // TODO: If Empty createContactsSlotDialog instead
+                    callContact(favContacts.get(index));
                 }
             });
         }
@@ -103,6 +104,11 @@ public class PhoneHubFragment extends ProductFragment {
             serialized.add(c.serialize());
         }
         getStoredProductStates().edit().putStringSet(KEY, serialized).apply();
+    }
+
+    private void callContact(FavoriteContact contact) {
+        String number = contact.getNumber(getContext());
+        Log.d("TEST", number);
     }
 
     public Dialog createContactSlotDialog(final int slot){
