@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -98,8 +99,10 @@ public class PhoneHubFragment extends ProductFragment {
             slots[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: If Empty createContactsSlotDialog instead
-                    call(favContacts.get(index).getNumber(getContext()));
+                    if(!favContacts.get(index).getIdentifier().contains("Empty"))
+                        call(favContacts.get(index).getNumber(getContext()));
+                    else
+                        createContactSlotDialog(index).show();
                 }
             });
         }
@@ -125,7 +128,7 @@ public class PhoneHubFragment extends ProductFragment {
             Intent callIntent = new Intent(Intent.ACTION_CALL, tel);
             startActivity(callIntent);
         } else {
-            //TODO: If contact doesn't have number - prompt message
+            Toast.makeText(getContext(), "This contact has no phone-number", Toast.LENGTH_SHORT).show();
         }
     }
 
