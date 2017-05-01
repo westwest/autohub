@@ -46,6 +46,7 @@ public class HubApp extends AppCompatActivity {
     //Permission request constants
     public static final int GPS_REQUEST = 1;
     public static final int PHONE_GATE_REQUEST = 2;
+    public static final int PHONE_CALL_REQUEST = 3;
 
     //Intent-keys
     public static final String SERVICE_REQUEST_INTENT = "service_request_intent";

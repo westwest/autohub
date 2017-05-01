@@ -1,11 +1,16 @@
 package se.acoder.autohub.hub.products.Phone;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +24,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import se.acoder.autohub.HubApp;
 import se.acoder.autohub.R;
 import se.acoder.autohub.hub.products.ProductFragment;
 
@@ -31,6 +37,7 @@ import static android.app.Activity.RESULT_OK;
 public class PhoneHubFragment extends ProductFragment {
     private final static String KEY = "favcontacts";
     private final static int RESULT_PICK_CONTACT_BASE = 210;
+
 
     private ArrayList<FavoriteContact> favContacts = new ArrayList<>();
     private TextView[] slots = new TextView[3];
@@ -92,7 +99,7 @@ public class PhoneHubFragment extends ProductFragment {
                 @Override
                 public void onClick(View v) {
                     // TODO: If Empty createContactsSlotDialog instead
-                    callContact(favContacts.get(index));
+                    call(favContacts.get(index).getNumber(getContext()));
                 }
             });
         }
@@ -106,9 +113,20 @@ public class PhoneHubFragment extends ProductFragment {
         getStoredProductStates().edit().putStringSet(KEY, serialized).apply();
     }
 
-    private void callContact(FavoriteContact contact) {
-        String number = contact.getNumber(getContext());
-        Log.d("TEST", number);
+    private void call(String number) {
+        if(number != null){
+            if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CALL_PHONE)
+                    != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.CALL_PHONE}, HubApp.PHONE_CALL_REQUEST);
+                return;
+            }
+            Uri tel = Uri.parse("tel:"+number);
+            Intent callIntent = new Intent(Intent.ACTION_CALL, tel);
+            startActivity(callIntent);
+        } else {
+            //TODO: If contact doesn't have number - prompt message
+        }
     }
 
     public Dialog createContactSlotDialog(final int slot){
