@@ -2,6 +2,7 @@ package se.acoder.autohub.hub.products.Phone;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -12,10 +13,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.telephony.PhoneNumberUtils;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -131,7 +137,7 @@ public class PhoneHubFragment extends ProductFragment {
         }
     }
 
-    public Dialog createContactSlotDialog(final int slot){
+    private Dialog createContactSlotDialog(final int slot){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -146,7 +152,7 @@ public class PhoneHubFragment extends ProductFragment {
         btnCustom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createCustomNumber();
+                createCustomNumber(slot);
                 dialog.dismiss();
             }
         });
@@ -161,16 +167,52 @@ public class PhoneHubFragment extends ProductFragment {
         return dialog;
     }
 
-    public void createCustomNumber(){
-        Log.d("TEST", "A");
+    private void createCustomNumber(final int slot){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Please input name and number below");
+        LinearLayout list = new LinearLayout(getContext());
+        list.setOrientation(LinearLayout.VERTICAL);
+        final EditText nameInput = new EditText(getContext());
+        nameInput.setHint("Name");
+        final EditText numInput = new EditText(getContext());
+        numInput.setHint("Number");
+        numInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+        list.addView(nameInput);
+        list.addView(numInput);
+        builder.setView(list);
+        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String name = nameInput.getText().toString();
+                String number = numInput.getText().toString();
+                if(!name.isEmpty() && PhoneNumberUtils.isGlobalPhoneNumber(number)){
+                    changeSlot(slot, new FavoriteContact(slot, name, number));
+                    dialog.dismiss();
+                }else{
+                    Toast.makeText(getContext(),
+                                   "Creation failed. Please provide a name and a valid number",
+                                   Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
-    public void contactPickedForSlot(int slot, Intent data){
-        FavoriteContact newContact = new FavoriteContact(slot, data.getDataString());
-        favContacts.set(slot, newContact);
-        slots[slot].setText(newContact.getIdentifier(getContext()));
-        setThumbToSlot(newContact.getDrawable(getContext()), slot);
+    private void changeSlot(int slot, FavoriteContact contact){
+        favContacts.set(slot, contact);
+        slots[slot].setText(contact.getIdentifier(getContext()));
+        setThumbToSlot(contact.getDrawable(getContext()), slot);
         saveContacts();
+    }
+
+    private void contactPickedForSlot(int slot, Intent data){
+        changeSlot(slot, new FavoriteContact(slot, data.getDataString()));
     }
 
     private void setThumbToSlot(Drawable thumb, int slot){
