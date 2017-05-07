@@ -29,10 +29,13 @@ public class PhoneProduct extends Product {
 
     @Override
     public boolean ensureGatePermission(Context context) {
-        if(ContextCompat.checkSelfPermission(context,
-                Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED){
+        boolean canReadContacts = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
+                                == PackageManager.PERMISSION_GRANTED;
+        boolean canReadCallLog = ContextCompat.checkSelfPermission(context,Manifest.permission.READ_CALL_LOG)
+                                == PackageManager.PERMISSION_GRANTED;
+        if(!canReadContacts || !canReadCallLog){
             ActivityCompat.requestPermissions(
-                    (Activity)context,new String[] { Manifest.permission.READ_CONTACTS }, HubApp.PHONE_GATE_REQUEST);
+                    (Activity)context,new String[] { Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CALL_LOG }, HubApp.PHONE_GATE_REQUEST);
             return false;
         }
         return true;
