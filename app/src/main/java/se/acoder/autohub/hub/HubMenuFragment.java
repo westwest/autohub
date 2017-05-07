@@ -71,7 +71,8 @@ public class HubMenuFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch(requestCode){
             case HubApp.PHONE_GATE_REQUEST: {
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                if(grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                                            && grantResults[1] == PackageManager.PERMISSION_GRANTED)
                     triggerProductInit(new PhoneProduct());
             }
         }

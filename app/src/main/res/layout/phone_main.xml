@@ -61,25 +61,12 @@
             android:text="TextView"
             android:textSize="18sp" />
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <fragment
+        android:id="@+id/fragment"
+        android:name="se.acoder.autohub.hub.products.Phone.CallLogFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="0.5"
-        android:orientation="vertical"
-        android:layout_margin="4dp"
-        android:padding="12dp" >
+        tools:layout="@android:layout/list_content" />
 
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Recent Calls"
-            android:gravity="center"
-            android:textSize="18sp"/>
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
 </LinearLayout>

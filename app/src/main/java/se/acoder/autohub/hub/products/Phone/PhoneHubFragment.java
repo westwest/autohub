@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +38,7 @@ public class PhoneHubFragment extends ProductFragment {
     private final static String KEY = "favcontacts";
     private final static int RESULT_PICK_CONTACT_BASE = 210;
 
-
+    // Fields for managing favorite contacts
     private ArrayList<FavoriteContact> favContacts = new ArrayList<>();
     private TextView[] slots = new TextView[3];
 
@@ -116,7 +115,7 @@ public class PhoneHubFragment extends ProductFragment {
         getStoredProductStates().edit().putStringSet(KEY, serialized).apply();
     }
 
-    private void call(String number) {
+    protected void call(String number) {
         if(number != null){
             if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CALL_PHONE)
                     != PackageManager.PERMISSION_GRANTED){
