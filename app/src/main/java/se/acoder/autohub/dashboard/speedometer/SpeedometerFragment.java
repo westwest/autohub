@@ -13,60 +13,41 @@ import android.view.ViewGroup;
 
 import se.acoder.autohub.HubApp;
 import se.acoder.autohub.R;
+import se.acoder.autohub.dashboard.GPSFragment;
 
 /**
  * Created by Johannes Westlund on 2017-03-19.
  */
 
-public class SpeedometerFragment extends Fragment {
+public class SpeedometerFragment extends GPSFragment {
     private SpeedometerView speedometer;
-
-    private LocationManager LM;
-    private LocationListener LS;
+    private int speedLimit;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater,container,savedInstanceState);
         speedometer = new SpeedometerView(getContext());
-        initGPS();
+        speedometer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleLimiter();
+            }
+        });
         return speedometer;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        ((HubApp) getActivity()).requestGPS(LM, LS);
-
+    private void toggleLimiter(){
+        boolean isLimitEnabled = speedLimit < 0;
+        /*
+        if(isLimitEnabled)
+            initLimiter();
+        else
+            speedLimit = -1;*/
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        LM.removeUpdates(LS);
-    }
-
-    private void initGPS() {
-        LM = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        LS = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                speedometer.setSpeed(location.getSpeed());
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
+    protected void newLocation(Location location) {
+        speedometer.setSpeed(location.getSpeed());
     }
 }

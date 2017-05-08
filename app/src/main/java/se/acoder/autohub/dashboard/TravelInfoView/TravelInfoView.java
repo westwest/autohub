@@ -1,23 +1,25 @@
 package se.acoder.autohub.dashboard.TravelInfoView;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
 import se.acoder.autohub.R;
+import se.acoder.autohub.dashboard.DrawView;
 
 /**
  * Created by Johannes Westlund on 2017-03-14.
  */
-public class TravelInfoView extends ConstraintLayout {
-    private View rootView;
-    private TextView vDistance, vTime;
-    private Grid grid;
+public class TravelInfoView extends DrawView {
+    private String distance;
+    private String time;
 
-    private int mainColor;
-
+    private final int textSize = 20;
+    private int textHeight;
 
     public TravelInfoView(Context context) {
         super(context);
@@ -27,6 +29,7 @@ public class TravelInfoView extends ConstraintLayout {
     public TravelInfoView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs, 0);
+
     }
 
     public TravelInfoView(Context context, AttributeSet attrs, int defStyle) {
@@ -35,25 +38,33 @@ public class TravelInfoView extends ConstraintLayout {
     }
 
     private void init(Context context, AttributeSet attrs, int defStyle) {
-        grid = new Grid(context, attrs, defStyle);
-        addView(grid);
+        update(0.0f, 0l);
+        textPaint.setTextSize(toPx(textSize,getResources()));
 
-        rootView = inflate(context, R.layout.travel_info_layout, this);
-        vDistance = (TextView) findViewById(R.id.ti_distance);
-        vTime = (TextView) findViewById(R.id.ti_time);
+        Rect bounds = new Rect();
+        String dimText = "000";
+        textPaint.getTextBounds(dimText,0,dimText.length(),bounds);
+        textHeight = bounds.height();
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        canvas.drawRect(0,0,getWidth(),getHeight(), bgPaint);
+        canvas.drawLine(0,0,getWidth(),0, linePaint);
+
+        canvas.drawText(distance, 56,  getHeight()/2+textHeight/2, textPaint);
+        canvas.drawText(time, 300,  getHeight()/2+textHeight/2, textPaint);
     }
 
     public void update(Float distance, Long time){
         if(distance != null)
-            vDistance.setText(formatDistance(distance));
+            this.distance = formatDistance(distance);
         if(time != null){
-            vTime.setText(formatTime(time));
+            this.time = formatTime(time);
         }
+        invalidate();
     }
 
     private String formatDistance(float distance){
