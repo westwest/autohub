@@ -44,45 +44,31 @@
         android:layout_alignParentStart="true"
         app:layout_constraintLeft_toLeftOf="parent" />
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/tiView"
-        app:layout_constraintRight_toRightOf="@+id/tiView"
-        app:layout_constraintTop_toTopOf="@+id/tiView"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+    <fragment
+        android:id="@+id/speedometer"
+        class="se.acoder.autohub.dashboard.speedometer.SpeedometerFragment"
+        android:layout_width="220dp"
+        android:layout_height="60dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout="@layout/speedometer_layout"
+        tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintLeft_creator="1">
-
-        <fragment
-            android:id="@+id/speedometer"
-            class="se.acoder.autohub.dashboard.speedometer.SpeedometerFragment"
-            android:layout_width="220dp"
-            android:layout_height="60dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout="@layout/speedometer_layout"
-            tools:layout_constraintRight_creator="1"
-            tools:layout_constraintLeft_creator="1" />
-    </android.support.constraint.ConstraintLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="0dp" />
 
     <TextClock
         android:id="@+id/textClock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="@+id/weatherInfo"
-        app:layout_constraintRight_toRightOf="@+id/weatherInfo"
-        app:layout_constraintBottom_toBottomOf="@+id/weatherInfo"
         android:layout_marginBottom="24dp"
-        app:layout_constraintTop_toTopOf="@+id/weatherInfo"
         android:layout_marginTop="8dp"
         android:textSize="26dp"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintLeft_creator="1" />
+        app:layout_constraintBottom_toBottomOf="@+id/weatherInfo"
+        app:layout_constraintLeft_toLeftOf="@+id/weatherInfo"
+        app:layout_constraintRight_toRightOf="@+id/weatherInfo"
+        app:layout_constraintTop_toTopOf="@+id/weatherInfo"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
 </android.support.constraint.ConstraintLayout>

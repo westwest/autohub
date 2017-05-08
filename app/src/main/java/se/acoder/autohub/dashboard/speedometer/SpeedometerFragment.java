@@ -27,10 +27,9 @@ public class SpeedometerFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.speedometer_layout, container, false);
-        speedometer = (SpeedometerView) rootView.findViewById(R.id.speedometer);
+        speedometer = new SpeedometerView(getContext());
         initGPS();
-        return rootView;
+        return speedometer;
     }
 
     @Override
