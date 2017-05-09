@@ -3,12 +3,16 @@ package se.acoder.autohub.dashboard.speedometer;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 
+import se.acoder.autohub.R;
 import se.acoder.autohub.dashboard.DrawView;
 
 /**
@@ -75,8 +79,23 @@ public class SpeedometerView extends DrawView {
         canvas.drawText(unit,getWidth()-skewDeltaX, getHeight()/2+textHeight/2, textPaint);
     }
 
-    public void setSpeed(float speed){
+    public void setLimited(boolean shouldLimit){
+        if(shouldLimit)
+            linePaint.setColor(Color.RED);
+        else
+            linePaint.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        invalidate();
+    }
+
+    public void setSpeed(float speed, SpeedometerFragment.LimitState state){
+        switch(state){
+            case ABOVE_LIMIT:
+                bgPaint.setColor(Color.RED);
+                break;
+            default:
+                bgPaint.setColor(ContextCompat.getColor(getContext(), R.color.colorDashBackground));
+        }
         this.speed = Math.round(speed * 3.6) + "";
-        this.invalidate();
+        invalidate();
     }
 }

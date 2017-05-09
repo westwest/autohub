@@ -21,7 +21,7 @@ import se.acoder.autohub.dashboard.GPSFragment;
 
 public class SpeedometerFragment extends GPSFragment {
     private SpeedometerView speedometer;
-    private int speedLimit;
+    private float lastSpeed, speedLimit;
 
     @Nullable
     @Override
@@ -38,16 +38,30 @@ public class SpeedometerFragment extends GPSFragment {
     }
 
     private void toggleLimiter(){
-        boolean isLimitEnabled = speedLimit < 0;
-        /*
+        boolean isLimitEnabled = speedLimit != 0;
         if(isLimitEnabled)
-            initLimiter();
+            speedLimit = -0f;
         else
-            speedLimit = -1;*/
+            speedLimit = lastSpeed;
+        speedometer.setLimited(!isLimitEnabled);
     }
 
     @Override
     protected void newLocation(Location location) {
-        speedometer.setSpeed(location.getSpeed());
+        LimitState state = LimitState.NO_LIMIT;
+        if(speedLimit > 0f){
+            if(location.getSpeed() <= speedLimit)
+                state = LimitState.BELOW_LIMIT;
+            else if(location.getSpeed() > speedLimit){
+                state = LimitState.ABOVE_LIMIT;
+            }
+        }
+
+        speedometer.setSpeed(location.getSpeed(), state);
+        lastSpeed = location.getSpeed();
+    }
+
+    protected enum LimitState {
+        NO_LIMIT, ABOVE_LIMIT, BELOW_LIMIT;
     }
 }
